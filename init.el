@@ -1,19 +1,16 @@
-(setq user-full-name "Tore Norderud")
-(setq user-mail-address "tore.norderud@gmail.com")
+(if (fboundp 'menu-bar-mode) (menu-bar-mode nil))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode nil))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode nil))
 
-(prefer-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
+(setq inhibit-splash-screen t)
+(setq initial-scratch-message nil)
 
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier 'super)
 (setq ns-function-modifier 'hyper)
 
 (setq bell-volume 0)
-(setq comint-prompt-read-only t)
 (setq ido-enable-flex-matching t)
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1)
 (setq sound-alist nil)
@@ -23,14 +20,17 @@
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
 (setq-default require-final-newline nil)
-(setq initial-scratch-message nil)
 
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'shell-mode-hook '(lambda () (toggle-truncate-lines 1)))
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
 (set-face-attribute 'default nil :height 150)
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(prefer-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
 
 ;; ---------------------------------------------------------
 
@@ -56,10 +56,6 @@
       (delete-other-windows))))
 
 ;; ---------------------------------------------------------
-
-(if (fboundp 'menu-bar-mode) (menu-bar-mode 0))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode 0))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode 0))
 
 (when (display-graphic-p)
   (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
