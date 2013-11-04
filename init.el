@@ -34,32 +34,39 @@
 
 ;; ---------------------------------------------------------
 
-(require 'package)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(package-initialize)
+(when (require 'package nil 'noerror)
+  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  (package-initialize)
 
-(when (not package-archive-contents)
-  (package-refresh-contents))
+  (when (not package-archive-contents)
+    (package-refresh-contents))
 
-(dolist (p
-	 '(better-defaults
-	   exec-path-from-shell
-	   git-commit-mode
-	   ido-ubiquitous
-	   magit
-	   monokai-theme
-	   org
-	   php-mode))
-  (when (not (package-installed-p p))
-    (package-install p)
-    (delete-other-windows)))
+  (dolist (p
+           '(better-defaults
+             exec-path-from-shell
+             git-commit-mode
+             ido-ubiquitous
+             magit
+             monokai-theme
+             org
+             php-mode))
+    (when (not (package-installed-p p))
+      (package-install p)
+      (delete-other-windows))))
 
 ;; ---------------------------------------------------------
 
+(if (fboundp 'menu-bar-mode) (menu-bar-mode 0))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode 0))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode 0))
+
 (when (display-graphic-p)
-  (if (fboundp 'menu-bar-mode) (menu-bar-mode t))
-  (require 'monokai-theme))
+  (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
+
+(unless (require 'monokai-theme nil 'noerror)
+  (set-foreground-color "white")
+  (set-background-color "black"))
 
 (custom-set-faces
  '(mode-line ((t (:foreground "#fff" :background "#444" :box nil))))
@@ -72,7 +79,6 @@
 (show-paren-mode)
 (transient-mark-mode 1)
 (global-hl-line-mode 0)
-(git-gutter-mode 1)
 (delete-selection-mode 1)
 
 ;; ---------------------------------------------------------
