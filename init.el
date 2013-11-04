@@ -243,3 +243,16 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
+;; http://xahlee.blogspot.no/2011/09/emacs-lisp-function-to-trim-string.html
+(defun trim-string (string)
+  "Remove white spaces in beginning and ending of STRING.
+White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
+  (replace-regexp-in-string "\\`[ \t\n]*" "" (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
+
+(defun insert-date ()
+  "Insert current date at point."
+  (interactive)
+  (insert (trim-string (format-time-string "%e. %B %Y"))))
+
+(global-set-key "\C-c\C-d" 'insert-date)
