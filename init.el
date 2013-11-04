@@ -1,6 +1,6 @@
-(if (fboundp 'menu-bar-mode) (menu-bar-mode nil))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode nil))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode nil))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message nil)
@@ -49,6 +49,7 @@
              ido-ubiquitous
              magit
              monokai-theme
+             multiple-cursors
              org
              php-mode))
     (when (not (package-installed-p p))
@@ -234,3 +235,9 @@
 (defun my-shell-hook ()
   (local-set-key (kbd "\C-l") 'my-clear))
 (add-hook 'shell-mode-hook 'my-shell-hook)
+
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
