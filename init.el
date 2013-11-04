@@ -9,14 +9,11 @@
 (setq mac-option-modifier 'super)
 (setq ns-function-modifier 'hyper)
 
-(setq bell-volume 0)
 (setq ido-enable-flex-matching t)
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1)
-(setq sound-alist nil)
 (setq visible-bell t)
 (setq-default comint-prompt-read-only t)
-(setq-default indent-tabs-mode nil)
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
 (setq-default require-final-newline nil)
@@ -107,8 +104,6 @@
      nil 'fullscreen
      (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 (global-set-key (kbd "M-<RET>") 'toggle-fullscreen)
-
-(global-set-key "\C-ca" 'org-agenda)
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -254,5 +249,4 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   "Insert current date at point."
   (interactive)
   (insert (trim-string (format-time-string "%e. %B %Y"))))
-
 (global-set-key "\C-c\C-d" 'insert-date)
