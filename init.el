@@ -46,6 +46,8 @@
            '(better-defaults
              exec-path-from-shell
              git-commit-mode
+             gitconfig-mode
+             gitignore-mode
              ido-ubiquitous
              magit
              monokai-theme
