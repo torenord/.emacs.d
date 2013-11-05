@@ -1,18 +1,30 @@
-(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-(setq inhibit-splash-screen t)
-(setq initial-scratch-message nil)
+;; Set path to dependencies
+(setq site-lisp-dir
+      (expand-file-name "site-lisp" user-emacs-directory))
 
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'super)
-(setq ns-function-modifier 'hyper)
+;; Set up load path
+(add-to-list 'load-path user-emacs-directory)
+(add-to-list 'load-path site-lisp-dir)
+
+;; Set up appearance early
+(require 'appearance)
+
+;; Write backup files to own directory
+(setq backup-directory-alist
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups")))))
+
+;; Make backups of files, even when they're in version control
+(setq vc-make-backup-files t)
+
+(ido-mode 1)
+(delete-selection-mode 1)
+(transient-mark-mode 1)
 
 (setq ido-enable-flex-matching t)
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1)
-(setq visible-bell t)
 (setq-default comint-prompt-read-only t)
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
@@ -64,19 +76,6 @@
   (set-foreground-color "white")
   (set-background-color "black"))
 
-(custom-set-faces
- '(mode-line ((t (:foreground "#fff" :background "#444" :box nil))))
- '(mode-line-inactive ((t (:foreground "#ccc" :background "#222" :box nil)))))
-
-(blink-cursor-mode 0)
-(ido-mode 1)
-(show-paren-mode 0)
-(column-number-mode)
-(show-paren-mode)
-(transient-mark-mode 1)
-(global-hl-line-mode 0)
-(delete-selection-mode 1)
-
 ;; ---------------------------------------------------------
 
 (global-set-key "\C-c\C-m" 'execute-extended-command)
@@ -89,20 +88,12 @@
 (global-set-key "\M-," (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key "\C-x\C-z" 'shell)
 
-(define-key key-translation-map (kbd "s-8") (kbd "["))
-(define-key key-translation-map (kbd "s-(") (kbd "{"))
-(define-key key-translation-map (kbd "s-9") (kbd "]"))
-(define-key key-translation-map (kbd "s-)") (kbd "}"))
-(define-key key-translation-map (kbd "s-7") (kbd "|"))
-(define-key key-translation-map (kbd "s-/") (kbd "\\"))
-(define-key key-translation-map (kbd "M-s-7") (kbd "M-|"))
-
 (defun toggle-fullscreen ()
   "Toggle full screen"
   (interactive)
   (set-frame-parameter
-     nil 'fullscreen
-     (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+   nil 'fullscreen
+   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 (global-set-key (kbd "M-<RET>") 'toggle-fullscreen)
 
 (defun eval-and-replace ()
@@ -250,3 +241,16 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (interactive)
   (insert (trim-string (format-time-string "%e. %B %Y"))))
 (global-set-key "\C-c\C-d" 'insert-date)
+
+;; Are we on a mac?
+(setq is-mac (equal system-type 'darwin))
+(when is-mac (require 'mac))
+
+;; Run at full power please
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+
+;; Keep emacs Custom-settings in separate file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file)
