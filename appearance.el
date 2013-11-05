@@ -12,7 +12,7 @@
 (setq truncate-partial-width-windows nil)
 (setq redisplay-dont-pause t)
 (blink-cursor-mode 0)
-(show-paren-mode 0)
+(show-paren-mode 1)
 (column-number-mode 1)
 
 (provide 'appearance)

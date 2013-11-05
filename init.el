@@ -1,4 +1,3 @@
-
 ;; Set path to dependencies
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
@@ -223,12 +222,6 @@
 (defun my-shell-hook ()
   (local-set-key (kbd "\C-l") 'my-clear))
 (add-hook 'shell-mode-hook 'my-shell-hook)
-
-(require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 
 ;; http://xahlee.blogspot.no/2011/09/emacs-lisp-function-to-trim-string.html
 (defun trim-string (string)
