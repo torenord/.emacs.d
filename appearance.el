@@ -13,6 +13,9 @@
 (setq redisplay-dont-pause t)
 (blink-cursor-mode 0)
 (show-paren-mode 1)
-(column-number-mode 1)
+
+;; Always display line and column numbers
+(setq line-number-mode t)
+(setq column-number-mode t)
 
 (provide 'appearance)

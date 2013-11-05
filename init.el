@@ -36,9 +36,12 @@
 (set-face-attribute 'default nil :height 150)
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(prefer-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
+;; UTF-8 please
+(setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 
 ;; ---------------------------------------------------------
 
@@ -77,14 +80,13 @@
 
 ;; ---------------------------------------------------------
 
-(global-set-key "\C-c\C-m" 'execute-extended-command)
-(global-set-key "\C-x\C-m" 'execute-extended-command)
-(global-set-key "\C-x\m" 'execute-extended-command)
+(require 'key-bindings)
 
-(global-set-key "\M-n" 'forward-paragraph)
-(global-set-key "\M-p" 'backward-paragraph)
+(defun goto-init-el ()
+  (interactive)
+  (find-file (expand-file-name "init.el" user-emacs-directory)))
 
-(global-set-key "\M-," (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key "\M-," 'goto-init-el)
 (global-set-key "\C-x\C-z" 'shell)
 
 (defun toggle-fullscreen ()
