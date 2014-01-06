@@ -82,6 +82,8 @@
 
 (require 'key-bindings)
 
+(global-set-key (kbd "C-.") 'hippie-expand)
+
 (defun goto-init-el ()
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
@@ -249,3 +251,9 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
+
+(defun ns-get-pasteboard ()
+  "Returns the value of the pasteboard, or nil for unsupported formats."
+  (condition-case nil
+      (ns-get-selection-internal 'CLIPBOARD)
+    (quit nil)))
