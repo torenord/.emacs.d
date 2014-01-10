@@ -29,7 +29,7 @@
 (setq-default next-line-add-newlines nil)
 (setq-default require-final-newline nil)
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'shell-mode-hook '(lambda () (toggle-truncate-lines 1)))
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
