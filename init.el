@@ -74,9 +74,19 @@
 (when (display-graphic-p)
   (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
 
-(unless (require 'monokai-theme nil 'noerror)
-  (set-foreground-color "white")
-  (set-background-color "black"))
+(set-face-attribute 'default nil :height 150)
+(set-face-attribute 'default nil :family "Inconsolata")
+
+(require 'color-theme)
+(require 'color-theme-molokai)
+(color-theme-molokai)
+
+(custom-set-faces
+ '(show-paren-match ((t (:background "#888"))))
+ '(mode-line ((t (:foreground "#fff" :background "#000" :box nil))))
+ '(mode-line-inactive ((t (:foreground "#fff" :background "#000" :box nil)))))
+
+(set-frame-parameter nil 'fullscreen 'fullheight)
 
 ;; ---------------------------------------------------------
 
