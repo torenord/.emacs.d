@@ -237,7 +237,7 @@
     (comint-truncate-buffer)))
 
 (defun my-shell-hook ()
-  (local-set-key (kbd "\C-l") 'my-clear))
+  (local-set-key (kbd "C-l") 'my-clear))
 (add-hook 'shell-mode-hook 'my-shell-hook)
 
 ;; http://xahlee.blogspot.no/2011/09/emacs-lisp-function-to-trim-string.html
@@ -246,11 +246,11 @@
 White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (replace-regexp-in-string "\\`[ \t\n]*" "" (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
 
-(defun insert-date ()
+(defun torenord/insert-date ()
   "Insert current date at point."
   (interactive)
   (insert (trim-string (format-time-string "%e. %B %Y"))))
-(global-set-key "\C-c\C-d" 'insert-date)
+(global-set-key "\C-c\C-d" 'torenord/insert-date)
 
 ;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
