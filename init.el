@@ -271,8 +271,8 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
       (ns-get-selection-internal 'CLIPBOARD)
     (quit nil)))
 
-(defun torenord--compile ()
+(defun torenord/compile ()
   (interactive)
   (save-window-excursion
     (compile "make -k")))
-(global-set-key (kbd "<f9>") 'torenord--compile)
+(global-set-key (kbd "<f9>") 'torenord/compile)
