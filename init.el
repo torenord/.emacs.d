@@ -1,16 +1,17 @@
 (setq user-full-name "Tore Norderud"
       user-mail-address "tore.norderud@gmail.com")
 
-;; Set path to dependencies
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
+(setq on-mac (equal system-type 'darwin))
+(setq on-gnu-linux (equal system-type 'gnu/linux))
 
-;; Set up load path
+(when (not (boundp 'user-emacs-directory))
+  (when (or on-mac on-gnu-linux) (setq user-emacs-directory "~/.emacs.d/")))
+
 (add-to-list 'load-path user-emacs-directory)
-(add-to-list 'load-path site-lisp-dir)
 
-;; Set up appearance early
+(require 'sane-defaults)
 (require 'appearance)
+(require 'key-bindings)
 
 ;; Write backup files to own directory
 (setq backup-directory-alist
@@ -19,32 +20,6 @@
 
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
-
-(ido-mode 1)
-(delete-selection-mode 1)
-(transient-mark-mode 1)
-
-(setq ido-enable-flex-matching t)
-(setq save-interprogram-paste-before-kill t)
-(setq scroll-conservatively 1)
-(setq-default comint-prompt-read-only t)
-(setq-default indent-tabs-mode nil)
-(setq-default next-line-add-newlines nil)
-(setq-default require-final-newline nil)
-
-;(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(add-hook 'shell-mode-hook '(lambda () (toggle-truncate-lines 1)))
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-(set-face-attribute 'default nil :height 150)
-(fset 'yes-or-no-p 'y-or-n-p)
-
-;; UTF-8 please
-(setq locale-coding-system 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(set-selection-coding-system 'utf-8)
-(prefer-coding-system 'utf-8)
 
 ;; ---------------------------------------------------------
 
@@ -58,14 +33,22 @@
 
   (dolist (p
            '(better-defaults
+             color-theme
+             color-theme-molokai
+             dired-details
              exec-path-from-shell
              git-commit-mode
              gitconfig-mode
              gitignore-mode
+             ido-vertical-mode
+             flx
+             flx-ido
              ido-ubiquitous
+             ido-at-point
+             smex
              magit
-             monokai-theme
              multiple-cursors
+             maude-mode
              org
              php-mode))
     (when (not (package-installed-p p))
@@ -74,35 +57,17 @@
 
 ;; ---------------------------------------------------------
 
-(when (display-graphic-p)
-  (if (fboundp 'menu-bar-mode) (menu-bar-mode 1)))
-
-(set-face-attribute 'default nil :height 150)
-(set-face-attribute 'default nil :family "Inconsolata")
-
-(require 'color-theme)
-(require 'color-theme-molokai)
-(color-theme-molokai)
-
 (custom-set-faces
- '(show-paren-match ((t (:background "#888"))))
- '(mode-line ((t (:foreground "#fff" :background "#000" :box nil))))
- '(mode-line-inactive ((t (:foreground "#fff" :background "#000" :box nil)))))
-
-(set-frame-parameter nil 'fullscreen 'fullheight)
+   '(fringe ((t (:background "#fff"))))
+   '(show-paren-match ((t (:background "#888"))))
+   '(mode-line ((t (:foreground "#fff" :background "#000" :box nil))))
+   '(mode-line-inactive ((t (:foreground "#fff" :background "#000" :box nil)))))
 
 ;; ---------------------------------------------------------
-
-(require 'key-bindings)
-
-(global-set-key (kbd "C-.") 'hippie-expand)
 
 (defun goto-init-el ()
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
-
-(global-set-key "\M-," 'goto-init-el)
-(global-set-key "\C-x\C-z" 'shell)
 
 (defun toggle-fullscreen ()
   "Toggle full screen"
@@ -110,7 +75,6 @@
   (set-frame-parameter
    nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
-(global-set-key (kbd "M-<RET>") 'toggle-fullscreen)
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -119,7 +83,6 @@
   (condition-case nil
       (prin1 (eval (read (current-kill 0)))
              (current-buffer))))
-(global-set-key (kbd "C-c C-e") 'eval-and-replace)
 
 (defun move-text-internal (arg)
    (cond
@@ -154,15 +117,6 @@
    (interactive "*p")
    (move-text-internal (- arg)))
 
-(global-set-key (kbd "<C-M-up>") 'move-text-up)
-(global-set-key (kbd "<C-M-down>") 'move-text-down)
-
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize)
-  (global-set-key (kbd "C-z") nil))
-
-(global-set-key (kbd "\C-x\g") 'magit-status)
-
 (defadvice magit-status (around magit-fullscreen activate)
   (window-configuration-to-register :magit-fullscreen)
   ad-do-it
@@ -193,17 +147,14 @@
           (select-window first-win)
           (if this-win-2nd (other-window 1))))))
 
-(global-set-key (kbd "C-M-<return>") 'toggle-window-split)
-
 (defun kill-all-buffers ()
   "Kill all buffers, only leaving *scratch*."
   (interactive)
   (mapcar (lambda (x) (kill-buffer x))
 	  (buffer-list))
   (delete-other-windows))
-(global-set-key "\C-x\C-j" 'kill-all-buffers)
 
-(defun rotate-windows ()
+(defun torenord/rotate-windows ()
   "Rotate your windows"
   (interactive)
   (cond ((not (> (count-windows)1))
@@ -228,51 +179,105 @@
              (set-window-start w2 s1)
              (setq i (1+ i)))))))
 
-(global-set-key (kbd "C-M-<backspace>") 'rotate-windows)
-(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
-
-(defun my-clear ()
-  (interactive)
-  (let ((comint-buffer-maximum-size 0))
-    (comint-truncate-buffer)))
-
-(defun my-shell-hook ()
-  (local-set-key (kbd "C-l") 'my-clear))
-(add-hook 'shell-mode-hook 'my-shell-hook)
-
-;; http://xahlee.blogspot.no/2011/09/emacs-lisp-function-to-trim-string.html
-(defun trim-string (string)
-  "Remove white spaces in beginning and ending of STRING.
-White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
-  (replace-regexp-in-string "\\`[ \t\n]*" "" (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
+ ;; from org-trim in org.el
+(defun torenord/trim (s)
+  "Remove whitespace at beginning and end of string."
+  (if (string-match "\\`[ \t\n\r]+" s) (setq s (replace-match "")))
+  (if (string-match "[ \t\n\r]+\\'" s) (setq s (replace-match "")))
+  s)
 
 (defun torenord/insert-date ()
   "Insert current date at point."
   (interactive)
-  (insert (trim-string (format-time-string "%e. %B %Y"))))
-(global-set-key "\C-c\C-d" 'torenord/insert-date)
-
-;; Are we on a mac?
-(setq is-mac (equal system-type 'darwin))
-(when is-mac (require 'mac))
-
-;; Run at full power please
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-
-;; Keep emacs Custom-settings in separate file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file)
-
-(defun ns-get-pasteboard ()
-  "Returns the value of the pasteboard, or nil for unsupported formats."
-  (condition-case nil
-      (ns-get-selection-internal 'CLIPBOARD)
-    (quit nil)))
+  (insert (torenord/trim (format-time-string "%e. %B %Y"))))
 
 (defun torenord/compile ()
   (interactive)
   (save-window-excursion
     (compile "make -k")))
-(global-set-key (kbd "<f9>") 'torenord/compile)
+
+(require 'setup-dired)
+(require 'setup-shell)
+
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (blink-cursor-mode -1)
+  (tooltip-mode -1)
+  (menu-bar-mode t))
+
+(apply-molokai)
+
+;; Smart M-x is smart
+(require 'smex)
+(smex-initialize)
+
+(ido-mode t)
+(setq ido-enable-prefix nil
+      ido-enable-flex-matching t
+      ido-case-fold nil
+      ido-auto-merge-work-directories-length -1
+      ido-create-new-buffer 'always
+      ido-use-filename-at-point nil
+      ido-max-prospects 10)
+
+;; Try out flx-ido for better flex matching between words
+(require 'flx-ido)
+(flx-ido-mode 1)
+;; disable ido faces to see flx highlights.
+(setq ido-use-faces nil)
+
+;; flx-ido looks better with ido-vertical-mode
+(require 'ido-vertical-mode)
+(ido-vertical-mode)
+
+(defun sd/ido-define-keys () ;; C-n/p is more intuitive in vertical layout
+  (define-key ido-completion-map (kbd "C-n") 'ido-next-match)
+  (define-key ido-completion-map (kbd "<down>") 'ido-next-match)
+  (define-key ido-completion-map (kbd "C-p") 'ido-prev-match)
+  (define-key ido-completion-map (kbd "<up>") 'ido-prev-match))
+
+(defun my/setup-ido ()
+  ;; Go straight home
+  (define-key ido-file-completion-map
+    (kbd "~")
+    (lambda ()
+      (interactive)
+      (cond
+       ((looking-back "~/") (insert "projects/"))
+       ((looking-back "/") (insert "~/"))
+       (:else (call-interactively 'self-insert-command)))))
+
+  ;; Use C-w to go back up a dir to better match normal usage of C-w
+  ;; - insert current file name with C-x C-w instead.
+  (define-key ido-file-completion-map (kbd "C-w") 'ido-delete-backward-updir)
+  (define-key ido-file-completion-map (kbd "C-x C-w") 'ido-copy-current-file-name)
+
+  (define-key ido-file-dir-completion-map (kbd "C-w") 'ido-delete-backward-updir)
+  (define-key ido-file-dir-completion-map (kbd "C-x C-w") 'ido-copy-current-file-name))
+
+(add-hook 'ido-setup-hook 'my/setup-ido)
+
+;; Always rescan buffer for imenu
+(set-default 'imenu-auto-rescan t)
+
+(add-to-list 'ido-ignore-directories "target")
+(add-to-list 'ido-ignore-directories "node_modules")
+
+;; Ido at point (C-,)
+(require 'ido-at-point)
+(ido-at-point-mode)
+
+;; Use ido everywhere
+(require 'ido-ubiquitous)
+(ido-ubiquitous-mode 1)
+
+;; Fix ido-ubiquitous for newer packages
+(defmacro ido-ubiquitous-use-new-completing-read (cmd package)
+  `(eval-after-load ,package
+     '(defadvice ,cmd (around ido-ubiquitous-new activate)
+        (let ((ido-ubiquitous-enable-compatibility nil))
+          ad-do-it))))
+
+(ido-vertical-mode t)
+
+(when on-mac (require 'mac))
