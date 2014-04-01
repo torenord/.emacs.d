@@ -7,7 +7,7 @@
 (when (not (boundp 'user-emacs-directory))
   (when (or on-mac on-gnu-linux) (setq user-emacs-directory "~/.emacs.d/")))
 
-(add-to-list 'load-path user-emacs-directory)
+(add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
 (require 'sane-defaults)
 (require 'appearance)
