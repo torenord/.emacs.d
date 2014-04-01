@@ -57,11 +57,10 @@
 
 ;; ---------------------------------------------------------
 
-(custom-set-faces
-   '(fringe ((t (:background "#fff"))))
-   '(show-paren-match ((t (:background "#888"))))
-   '(mode-line ((t (:foreground "#fff" :background "#000" :box nil))))
-   '(mode-line-inactive ((t (:foreground "#fff" :background "#000" :box nil)))))
+(set-face-attribute 'fringe nil :background "#000")
+(set-face-attribute 'show-paren-match nil :background "#888")
+(set-face-attribute 'mode-line nil :foreground "#fff" :background "#000" :box nil)
+(set-face-attribute 'mode-line-inactive nil :foreground "#fff" :background "#000" :box nil)
 
 ;; ---------------------------------------------------------
 
