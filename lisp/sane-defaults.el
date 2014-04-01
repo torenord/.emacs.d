@@ -12,6 +12,7 @@
 
 (delete-selection-mode t)
 (transient-mark-mode t)
+(show-paren-mode t)
 
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1)
