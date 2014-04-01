@@ -57,13 +57,6 @@
 
 ;; ---------------------------------------------------------
 
-(set-face-attribute 'fringe nil :background "#000")
-(set-face-attribute 'show-paren-match nil :background "#888")
-(set-face-attribute 'mode-line nil :foreground "#fff" :background "#000" :box nil)
-(set-face-attribute 'mode-line-inactive nil :foreground "#fff" :background "#000" :box nil)
-
-;; ---------------------------------------------------------
-
 (defun goto-init-el ()
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))

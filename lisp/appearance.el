@@ -47,4 +47,9 @@
   (cond (is-molokai (apply-github) (apply-github))
         (is-github (apply-molokai) (apply-molokai))))
 
+(set-face-attribute 'fringe nil :background "#000000")
+(set-face-attribute 'show-paren-match nil :background "#888888")
+(set-face-attribute 'mode-line nil :foreground "#ffffff" :background "#000000" :box nil)
+(set-face-attribute 'mode-line-inactive nil :foreground "#ffffff" :background "#000000" :box nil)
+
 (provide 'appearance)
