@@ -174,8 +174,8 @@
  ;; from org-trim in org.el
 (defun torenord/trim (s)
   "Remove whitespace at beginning and end of string."
-  (if (string-match "\\`[ \t\n\r]+" s) (setq s (replace-match "")))
-  (if (string-match "[ \t\n\r]+\\'" s) (setq s (replace-match "")))
+  (if (string-match "\\`[ \t\n\r]+" s) (setq s (replace-match "" nil nil s)))
+  (if (string-match "[ \t\n\r]+\\'" s) (setq s (replace-match "" nil nil s)))
   s)
 
 (defun torenord/insert-date ()
