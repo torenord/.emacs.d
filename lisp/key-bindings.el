@@ -8,7 +8,7 @@
 (global-set-key (kbd "C-æ") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-Æ") 'mc/mark-all-like-this)
 
-(global-set-key (kbd "<F8>") 'switch-theme)
+(global-set-key (kbd "<f8>") 'switch-theme)
 (global-set-key (kbd "C-.") 'hippie-expand)
 
 (global-set-key (kbd "M-,") 'goto-init-el)
