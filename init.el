@@ -23,8 +23,10 @@
 ;; ---------------------------------------------------------
 
 (when (require 'package nil 'noerror)
-  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+  (setq package-archives
+        '(("melpa" . "http://melpa.milkbox.net/packages/")
+          ("gnu" . "http://elpa.gnu.org/packages/")))
+
   (package-initialize)
 
   (when (not package-archive-contents)

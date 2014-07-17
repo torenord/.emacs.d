@@ -1,6 +1,12 @@
-(global-set-key (kbd "C-c C-m") 'smex)
-(global-set-key (kbd "C-x C-m") 'smex)
-(global-set-key (kbd "C-x m") 'smex)
+(when (require 'smex nil 'noerror)
+  (global-set-key (kbd "C-c C-m") 'smex)
+  (global-set-key (kbd "C-x C-m") 'smex)
+  (global-set-key (kbd "C-x m") 'smex))
+
+(unless (require 'smex nil 'noerror)
+  (global-set-key (kbd "C-c C-m") 'smex)
+  (global-set-key (kbd "C-x C-m") 'smex)
+  (global-set-key (kbd "C-x m") 'smex))
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
