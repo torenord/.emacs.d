@@ -262,6 +262,4 @@
         (let ((ido-ubiquitous-enable-compatibility nil))
           ad-do-it))))
 
-(ido-vertical-mode t)
-
 (when on-mac (require 'mac))
