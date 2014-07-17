@@ -1,11 +1,10 @@
 (setq user-full-name "Tore Norderud"
       user-mail-address "tore.norderud@gmail.com")
 
+(setq default-directory "~")
+
 (setq on-mac (equal system-type 'darwin))
 (setq on-gnu-linux (equal system-type 'gnu/linux))
-
-(when (not (boundp 'user-emacs-directory))
-  (when (or on-mac on-gnu-linux) (setq user-emacs-directory "~/.emacs.d/")))
 
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
@@ -32,9 +31,8 @@
     (package-refresh-contents))
 
   (dolist (p
-           '(better-defaults
-             color-theme
-             color-theme-molokai
+           '(
+             better-defaults
              dired-details
              exec-path-from-shell
              git-commit-mode
@@ -47,10 +45,8 @@
              ido-at-point
              smex
              magit
-             multiple-cursors
-             maude-mode
              org
-             php-mode))
+             ))
     (when (not (package-installed-p p))
       (package-install p)
       (delete-other-windows))))
@@ -196,8 +192,6 @@
   (blink-cursor-mode -1)
   (tooltip-mode -1)
   (menu-bar-mode t))
-
-(apply-molokai)
 
 ;; Smart M-x is smart
 (require 'smex)

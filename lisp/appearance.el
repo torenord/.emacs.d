@@ -12,44 +12,12 @@
 (setq column-number-mode t)
 
 (when (and on-mac (fboundp 'font-family-list))
-  (set-face-attribute 'default nil :height 150)
+  (set-face-attribute 'default nil :height 180)
   (when (member "Inconsolata" (font-family-list))
     (set-face-attribute 'default nil :family "Inconsolata")))
 
-(defun apply-molokai ()
-  (require 'color-theme)
-  (require 'color-theme-molokai)
-  (color-theme-molokai)
-  (custom-set-faces
-   '(fringe ((t (:background "#000"))))
-   '(show-paren-match ((t (:background "#888"))))
-   '(mode-line ((t (:foreground "#fff" :background "#000" :box nil))))
-   '(mode-line-inactive ((t (:foreground "#fff" :background "#000" :box nil))))))
-
-(defun apply-github ()
-  (require 'color-theme)
-  (require 'color-theme-github)
-  (color-theme-github)
-
-  (custom-set-faces
-   '(fringe ((t (:background "#fff"))))
-   '(show-paren-match ((t (:background "#888"))))
-   '(mode-line ((t (:foreground "#fff" :background "#000" :box nil))))
-   '(mode-line-inactive ((t (:foreground "#fff" :background "#000" :box nil))))))
-
-(setq is-molokai t)
-(setq is-github nil)
-
-(defun switch-theme ()
-  (interactive)
-  (setq is-molokai (not is-molokai))
-  (setq is-github (not is-github))
-  (cond (is-molokai (apply-github) (apply-github))
-        (is-github (apply-molokai) (apply-molokai))))
-
-(set-face-attribute 'fringe nil :background "#000000")
 (set-face-attribute 'show-paren-match nil :background "#888888")
-(set-face-attribute 'mode-line nil :foreground "#ffffff" :background "#000000" :box nil)
-(set-face-attribute 'mode-line-inactive nil :foreground "#ffffff" :background "#000000" :box nil)
+(set-face-attribute 'mode-line nil :box nil)
+(set-face-attribute 'mode-line-inactive nil :box nil)
 
 (provide 'appearance)
