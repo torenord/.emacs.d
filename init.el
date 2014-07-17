@@ -248,12 +248,12 @@
 (add-to-list 'ido-ignore-directories "node_modules")
 
 ;; Ido at point (C-,)
-(require 'ido-at-point)
-(ido-at-point-mode)
+(when (require 'ido-at-point nil 'noerror)
+  (ido-at-point-mode))
 
 ;; Use ido everywhere
-(require 'ido-ubiquitous)
-(ido-ubiquitous-mode 1)
+(when (require 'ido-ubiquitous nil 'noerror)
+  (ido-ubiquitous-mode 1))
 
 ;; Fix ido-ubiquitous for newer packages
 (defmacro ido-ubiquitous-use-new-completing-read (cmd package)
