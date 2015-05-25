@@ -84,6 +84,7 @@
              haskell-mode
              ido-vertical-mode
              jedi
+             leuven-theme
              macrostep
              magit
              markdown-mode
@@ -432,6 +433,7 @@
            ((equal theme 'leuven)
             (progn
               (load-theme 'leuven t)
+              (set-face-attribute 'region nil :background "#b3d2f3")
               (set-face-attribute 'show-paren-match nil :background "#b3d2f3")
               (set-cursor-color "black")))))
    'leuven))
