@@ -81,6 +81,7 @@
              git-commit-mode
              gitconfig-mode
              gitignore-mode
+             guru-mode
              haskell-mode
              ido-vertical-mode
              jedi
@@ -102,6 +103,10 @@
 (or (require 'use-package nil 'noerror)
     (defmacro use-package (&rest args)
       `nil))
+
+(use-package guru-mode
+  :config
+  (guru-global-mode 1))
 
 (use-package ido
   :init
