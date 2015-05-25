@@ -92,6 +92,7 @@
              molokai-theme
              move-text
              multiple-cursors
+             nginx-mode
              org
              smex
              try
