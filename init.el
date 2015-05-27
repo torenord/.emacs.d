@@ -29,6 +29,9 @@
 (setq visible-bell t)
 (setq save-interprogram-paste-before-kill t)
 (setq truncate-partial-width-windows nil)
+(setq load-prefer-newer t)
+(setq gc-cons-threshold 50000000)
+(setq large-file-warning-threshold 100000000)
 
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
@@ -135,7 +138,7 @@
         org-agenda-skip-scheduled-if-done nil
         org-agenda-start-on-weekday nil
         org-deadline-warning-days 10
-        org-default-notes-file "~/Dropbox/org/notes.org"
+        org-default-notes-file "~/org/notes.org"
         org-habit-show-all-today nil
         org-habit-show-done-always-green t
         org-habit-show-habits-only-for-today t
@@ -143,10 +146,14 @@
 
   (use-package org-agenda
     :config
-    (setq org-agenda-files '("~/Dropbox/org/notes.org"
-                             "~/Dropbox/org/habits.org"))
+    (setq org-agenda-files '("~/org/notes.org"
+                             "~/org/habits.org"))
     (use-package org-habit)
     :bind ("C-c a" . org-agenda))
+
+  (use-package org-bullets
+    :config
+    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
   :bind ("C-c c" . org-capture))
 
@@ -198,6 +205,15 @@
 (use-package dired-details
   :defer 1
   :config
+
+  (if (executable-find "gls")
+      (progn
+        (setq dired-use-ls-dired t)
+        (setq insert-directory-program (executable-find "gls")))
+    (progn
+        (setq ls-lisp-use-insert-directory-program nil)
+        (require 'ls-lisp)))
+
   (setq-default dired-details-hidden-string "--- ")
   (dired-details-install))
 
@@ -316,7 +332,7 @@
 (global-set-key (kbd "C-c C-d") 'torenord/insert-date)
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "C-x C-j") 'kill-all-buffers)
-(global-set-key (kbd "C-ø") 'er/expand-region)
+(global-set-key (kbd "C-@") 'er/expand-region)
 
 ;; ### Various ###
 
