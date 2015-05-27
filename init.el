@@ -75,9 +75,12 @@
 
   (dolist (p
            '(ace-jump-mode
+             clojure-mode
              dired-details
              exec-path-from-shell
              expand-region
+             flyspell
+             geiser
              git-commit-mode
              gitconfig-mode
              gitignore-mode
@@ -89,11 +92,13 @@
              macrostep
              magit
              markdown-mode
+             maude-mode
              molokai-theme
              move-text
              multiple-cursors
              nginx-mode
              org
+             org-bullets
              smex
              try
              use-package))
