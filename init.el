@@ -78,6 +78,7 @@
 
   (dolist (p
            '(ace-jump-mode
+             chess
              clojure-mode
              dired-details
              exec-path-from-shell
@@ -102,6 +103,7 @@
              nginx-mode
              org
              org-bullets
+             php-mode
              smex
              try
              use-package))
@@ -195,7 +197,7 @@
   :bind ("C-c e m" . macrostep-expand))
 
 (use-package ace-jump-mode
-  :bind ("C-Ø" . ace-jump-mode)
+  :bind ("C-å" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
