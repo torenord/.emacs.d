@@ -23,7 +23,7 @@
 
 ;; ### Sanity ###
 
-(setq inhibit-splash-screen t)       ; alias for inhibit-startup-screen
+(setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
 (setq visible-bell t)
@@ -80,6 +80,7 @@
            '(ace-jump-mode
              chess
              clojure-mode
+             company
              dired-details
              exec-path-from-shell
              expand-region
@@ -88,10 +89,10 @@
              git-commit-mode
              gitconfig-mode
              gitignore-mode
-             guru-mode
              haskell-mode
              ido-vertical-mode
              jedi
+             js2-mode
              leuven-theme
              macrostep
              magit
@@ -106,7 +107,8 @@
              php-mode
              smex
              try
-             use-package))
+             use-package
+             web-mode))
     (when (not (package-installed-p p))
       (package-install p)
       (delete-other-windows))))
@@ -114,10 +116,6 @@
 (or (require 'use-package nil 'noerror)
     (defmacro use-package (&rest args)
       `nil))
-
-(use-package guru-mode
-  :config
-  (guru-global-mode 1))
 
 (use-package ido
   :init
@@ -163,7 +161,22 @@
   :defer
   :init
   (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indent))
+  (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+  :config
+  (eval-after-load "haskell-mode"
+       '(progn
+         (define-key haskell-mode-map (kbd "C-x C-d") nil)
+         (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+         (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+         (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
+         (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+         (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+         (define-key haskell-mode-map (kbd "C-c M-.") nil)
+         (define-key haskell-mode-map (kbd "C-c C-d") nil)))
+  (eval-after-load "haskell-mode"
+    '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
+  (eval-after-load "haskell-cabal"
+    '(define-key haskell-cabal-mode-map (kbd "C-c C-c") 'haskell-compile)))
 
 (use-package lisp-mode
   :defer
@@ -197,12 +210,18 @@
   :bind ("C-c e m" . macrostep-expand))
 
 (use-package ace-jump-mode
-  :bind ("C-å" . ace-jump-mode)
+  :bind ("M-z" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
           ace-jump-word-mode
           ace-jump-line-mode)))
+
+(use-package web-mode
+  :mode ("\\.php\\'"
+         "\\.html\\'"
+         "\\.js\\'"
+         "\\.css\\'"))
 
 (use-package dired-details
   :defer 1
@@ -424,7 +443,9 @@
 (defun torenord/insert-date ()
   "Insert current date at point."
   (interactive)
-  (insert (torenord/trim (format-time-string "%e. %b %Y"))))
+  (insert (torenord/trim (format-time-string "%e. %B %Y"))))
+
+(eval-after-load "geiser" '(setq geiser-active-implementations '(guile)))
 
 ;; ### Mac ###
 
