@@ -9,10 +9,10 @@
 ;; Disable modes
 (dolist (mode
          '(menu-bar-mode
-           tool-bar-mode
+           blink-cursor-mode
            scroll-bar-mode
-           tooltip-mode
-           blink-cursor-mode))
+           tool-bar-mode
+           tooltip-mode))
   (if (fboundp mode) (funcall mode -1)))
 
 ;; Enable modes
@@ -164,15 +164,15 @@
   (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
   :config
   (eval-after-load "haskell-mode"
-       '(progn
-         (define-key haskell-mode-map (kbd "C-x C-d") nil)
-         (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
-         (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
-         (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
-         (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
-         (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
-         (define-key haskell-mode-map (kbd "C-c M-.") nil)
-         (define-key haskell-mode-map (kbd "C-c C-d") nil)))
+    '(progn
+       (define-key haskell-mode-map (kbd "C-x C-d") nil)
+       (define-key haskell-mode-map (kbd "C-c C-z") 'haskell-interactive-switch)
+       (define-key haskell-mode-map (kbd "C-c C-l") 'haskell-process-load-file)
+       (define-key haskell-mode-map (kbd "C-c C-b") 'haskell-interactive-switch)
+       (define-key haskell-mode-map (kbd "C-c C-t") 'haskell-process-do-type)
+       (define-key haskell-mode-map (kbd "C-c C-i") 'haskell-process-do-info)
+       (define-key haskell-mode-map (kbd "C-c M-.") nil)
+       (define-key haskell-mode-map (kbd "C-c C-d") nil)))
   (eval-after-load "haskell-mode"
     '(define-key haskell-mode-map (kbd "C-c C-c") 'haskell-compile))
   (eval-after-load "haskell-cabal"
@@ -232,8 +232,8 @@
         (setq dired-use-ls-dired t)
         (setq insert-directory-program (executable-find "gls")))
     (progn
-        (setq ls-lisp-use-insert-directory-program nil)
-        (require 'ls-lisp)))
+      (setq ls-lisp-use-insert-directory-program nil)
+      (require 'ls-lisp)))
 
   (setq-default dired-details-hidden-string "--- ")
   (dired-details-install))
@@ -267,6 +267,9 @@
   :config
   (setq dirtrack-list '("λ \\([^ ]+\\) " 1))
   (add-hook 'shell-mode-hook 'dirtrack-mode)
+
+  (add-to-list 'display-buffer-alist
+               '("^\\*shell\\*$" . (display-buffer-same-window)))
 
   (defun torenord/shell-clear ()
     (interactive)
@@ -377,10 +380,9 @@
              (current-buffer))))
 
 (defun kill-all-buffers ()
-  "kill all buffers, only leaving *scratch*."
+  "Kill all buffers, only leaving *scratch*."
   (interactive)
-  (mapcar (lambda (x) (kill-buffer x))
-          (buffer-list))
+  (mapcar (lambda (x) (kill-buffer x)) (buffer-list))
   (delete-other-windows))
 
 (defun toggle-window-split ()
