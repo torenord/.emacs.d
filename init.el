@@ -345,6 +345,10 @@
   :bind (("C-æ" . mc/mark-next-like-this)
          ("C-Æ" . mc/mark-all-like-this)))
 
+(use-package company
+  :config
+  (global-company-mode t))
+
 (use-package git-gutter-fringe
   :preface
   (global-git-gutter-mode 1)
@@ -527,6 +531,3 @@
                (message "Loading %s...done (%.3fs)"
                         ,load-file-name elapsed)))
           t)
-
-(global-company-mode t)
-
