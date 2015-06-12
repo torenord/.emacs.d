@@ -23,7 +23,7 @@
 
 ;; ### Sanity ###
 
-(setq inhibit-startup-screen t)
+(setq inhibit-splash-screen t)          ; alias for inhibit-startup-screen
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
 (setq visible-bell t)
@@ -39,9 +39,12 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-(put 'downcase-region 'disabled nil)
-(put 'upcase-region 'disabled nil)
+(put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'scroll-left 'disabled nil)
+(put 'erase-buffer 'disabled nil)
 
 (unless (boundp 'user-emacs-directory)
   (setq user-emacs-directory "~/.emacs.d/"))
@@ -87,6 +90,7 @@
              flyspell
              geiser
              git-commit-mode
+             git-gutter-fringe
              gitconfig-mode
              gitignore-mode
              haskell-mode
@@ -210,7 +214,7 @@
   :bind ("C-c e m" . macrostep-expand))
 
 (use-package ace-jump-mode
-  :bind ("M-z" . ace-jump-mode)
+  :bind ("C-c SPC" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
@@ -341,6 +345,19 @@
   :bind (("C-æ" . mc/mark-next-like-this)
          ("C-Æ" . mc/mark-all-like-this)))
 
+(use-package git-gutter-fringe
+  :preface
+  (global-git-gutter-mode 1)
+  (set-face-foreground 'git-gutter:modified "#c0c")
+  (set-face-foreground 'git-gutter:added "#0c0")
+  (set-face-foreground 'git-gutter:deleted "#c00")
+  (set-face-background 'git-gutter:modified "#c0c")
+  (set-face-background 'git-gutter:added "#0c0")
+  (set-face-background 'git-gutter:deleted "#c00")
+  (custom-set-variables
+   '(git-gutter:update-interval 1))
+  :if (window-system))
+
 ;; ### Keybindings ###
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
@@ -357,8 +374,19 @@
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "C-x C-j") 'kill-all-buffers)
 (global-set-key (kbd "C-@") 'er/expand-region)
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "<C-tab>") 'tidy)
 
 ;; ### Various ###
+
+(defun tidy ()
+  "Ident, untabify and unwhitespacify current buffer, or region if active."
+  (interactive)
+  (let ((beg (if (region-active-p) (region-beginning) (point-min)))
+        (end (if (region-active-p) (region-end) (point-max))))
+    (indent-region beg end)
+    (whitespace-cleanup)
+    (untabify beg (if (< end (point-max)) end (point-max)))))
 
 (defun goto-init-el ()
   (interactive)
@@ -499,3 +527,6 @@
                (message "Loading %s...done (%.3fs)"
                         ,load-file-name elapsed)))
           t)
+
+(global-company-mode t)
+
