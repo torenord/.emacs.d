@@ -26,7 +26,7 @@
 
 ;; ### Sanity ###
 
-(setq inhibit-splash-screen t)          ; alias for inhibit-startup-screen
+(setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
 (setq visible-bell t)
@@ -115,6 +115,7 @@
              php-mode
              smex
              try
+             undo-tree
              use-package
              web-mode))
     (when (not (package-installed-p p))
@@ -370,6 +371,10 @@
    '(git-gutter:update-interval 1))
   :if (window-system))
 
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode))
+
 ;; ### Keybindings ###
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
@@ -378,7 +383,7 @@
 (global-set-key (kbd "C-M-p") 'backward-sexp)
 (global-set-key (kbd "C-.") 'hippie-expand)
 (global-set-key (kbd "M-,") 'goto-init-el)
-(global-set-key (kbd "M-<RET>") 'toggle-fullscreen)
+(global-set-key (kbd "M-<RET>") 'torenord/toggle-fullscreen)
 (global-set-key (kbd "C-c C-e") 'eval-and-replace)
 (global-set-key (kbd "<C-M-S-up>") 'move-text-up)
 (global-set-key (kbd "<C-M-S-down>") 'move-text-down)
@@ -405,13 +410,6 @@
 (defun goto-init-el ()
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
-
-(defun toggle-fullscreen ()
-  "Toggle full screen"
-  (interactive)
-  (set-frame-parameter
-   nil 'fullscreen
-   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
 (defun eval-and-replace ()
   "Replace the preceding sexp with its value."
@@ -490,6 +488,12 @@
   (insert (torenord/trim (format-time-string "%e. %B %Y"))))
 
 (eval-after-load "geiser" '(setq geiser-active-implementations '(guile)))
+
+(defun torenord/toggle-fullscreen ()
+  "Toggle fullscreen."
+  (interactive)
+  (set-frame-parameter nil 'fullscreen
+   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
 ;; ### Mac ###
 
