@@ -2,6 +2,9 @@
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
+(setq user-full-name "Tore Norderud"
+      user-mail-address "torenord@uio.no")
+
 (setq on-mac (equal system-type 'darwin))
 
 ;; ### Modes ###
@@ -108,6 +111,7 @@
              nginx-mode
              org
              org-bullets
+             paredit
              php-mode
              smex
              try
@@ -226,6 +230,10 @@
          "\\.html\\'"
          "\\.js\\'"
          "\\.css\\'"))
+
+(use-package dired
+  :config
+  (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "å") 'dired-up-directory))))
 
 (use-package dired-details
   :defer 1
@@ -366,6 +374,8 @@
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "C-M-n") 'forward-sexp)
+(global-set-key (kbd "C-M-p") 'backward-sexp)
 (global-set-key (kbd "C-.") 'hippie-expand)
 (global-set-key (kbd "M-,") 'goto-init-el)
 (global-set-key (kbd "M-<RET>") 'toggle-fullscreen)
@@ -443,7 +453,7 @@
           (if this-win-2nd (other-window 1))))))
 
 (defun torenord/rotate-windows ()
-  "rotate your windows"
+  "Rotate your windows"
   (interactive)
   (cond ((not (> (count-windows)1))
          (message "you can't rotate a single window!"))
@@ -496,9 +506,9 @@
     (menu-bar-mode 1)
 
     (when (fboundp 'font-family-list)
-      (set-face-attribute 'default nil :height 180)
-      (when (member "Inconsolata" (font-family-list))
-        (set-face-attribute 'default nil :family "Inconsolata")))))
+      (set-face-attribute 'default nil :height 135)
+      (when (member "Monaco" (font-family-list))
+        (set-face-attribute 'default nil :family "Monaco")))))
 
 ;; ### Apperance ###
 
@@ -510,7 +520,7 @@
             (progn
               (load-theme 'molokai t)
               (set-cursor-color "#fff")
-              (set-face-attribute 'show-paren-match nil :background "#ccc")
+              (set-face-attribute 'show-paren-match nil :background "#aaa")
               (set-face-attribute 'mode-line nil :background "#888" :box nil)
               (set-face-attribute 'mode-line-inactive nil :background "#000" :box nil)
               (set-face-attribute 'region nil :background "#888")))
