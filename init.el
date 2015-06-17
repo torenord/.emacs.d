@@ -5,6 +5,7 @@
 (setq user-full-name "Tore Norderud"
       user-mail-address "torenord@uio.no")
 
+(setq on-linux (equal system-type 'gnu/linux))
 (setq on-mac (equal system-type 'darwin))
 
 ;; ### Modes ###
@@ -494,6 +495,11 @@
   (interactive)
   (set-frame-parameter nil 'fullscreen
    (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
+
+;; ### Linux ###
+
+(when on-linux
+  (setq x-super-keysym 'meta))
 
 ;; ### Mac ###
 
