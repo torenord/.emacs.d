@@ -322,11 +322,11 @@
         (shell)
         (set-process-query-on-exit-flag (get-process "shell") nil)))))
 
+(global-set-key (kbd "C-c C-m") 'execute-extended-command)
+(global-set-key (kbd "C-x C-m") 'execute-extended-command)
+(global-set-key (kbd "C-x m") 'execute-extended-command)
+
 (use-package smex
-  :init
-  (global-set-key (kbd "C-c C-m") 'execute-extended-command)
-  (global-set-key (kbd "C-x C-m") 'execute-extended-command)
-  (global-set-key (kbd "C-x m") 'execute-extended-command)
   :bind (("M-x" . smex)
          ("C-c C-m" . smex)
          ("C-x C-m" . smex)
@@ -499,7 +499,10 @@
 ;; ### Linux ###
 
 (when on-linux
-  (setq x-super-keysym 'meta))
+  (setq x-super-keysym 'meta)
+  (set-face-attribute 'default nil
+                      :height 90
+                      :family "Liberation Mono"))
 
 ;; ### Mac ###
 
