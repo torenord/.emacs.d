@@ -22,6 +22,7 @@
 ;; Enable modes
 (dolist (mode
          '(delete-selection-mode
+           display-battery-mode
            column-number-mode))
   (if (fboundp mode) (funcall mode 1)))
 
@@ -85,7 +86,6 @@
 
   (dolist (p
            '(ace-jump-mode
-             chess
              clojure-mode
              company
              dired-details
@@ -384,7 +384,7 @@
 (global-set-key (kbd "C-M-p") 'backward-sexp)
 (global-set-key (kbd "C-.") 'hippie-expand)
 (global-set-key (kbd "M-,") 'goto-init-el)
-(global-set-key (kbd "M-<RET>") 'torenord/toggle-fullscreen)
+(global-set-key (kbd "M-<RET>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "C-c C-e") 'eval-and-replace)
 (global-set-key (kbd "<C-M-S-up>") 'move-text-up)
 (global-set-key (kbd "<C-M-S-down>") 'move-text-down)
@@ -489,12 +489,6 @@
   (insert (torenord/trim (format-time-string "%e. %B %Y"))))
 
 (eval-after-load "geiser" '(setq geiser-active-implementations '(guile)))
-
-(defun torenord/toggle-fullscreen ()
-  "Toggle fullscreen."
-  (interactive)
-  (set-frame-parameter nil 'fullscreen
-   (when (not (frame-parameter nil 'fullscreen)) 'fullboth)))
 
 ;; ### Linux ###
 
