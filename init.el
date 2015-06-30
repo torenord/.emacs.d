@@ -22,7 +22,6 @@
 ;; Enable modes
 (dolist (mode
          '(delete-selection-mode
-           display-battery-mode
            column-number-mode))
   (if (fboundp mode) (funcall mode 1)))
 
@@ -108,6 +107,7 @@
              maude-mode
              molokai-theme
              move-text
+             multi-term
              multiple-cursors
              nginx-mode
              org
@@ -219,8 +219,11 @@
 (use-package macrostep
   :bind ("C-c e m" . macrostep-expand))
 
+(use-package nginx-mode
+  :mode ("/etc/nginx/sites-*/*" . nginx-mode))
+
 (use-package ace-jump-mode
-  :bind ("C-c SPC" . ace-jump-mode)
+  :bind ("M-z" . ace-jump-mode)
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
@@ -358,6 +361,16 @@
 (use-package company
   :config
   (global-company-mode t))
+
+(use-package paredit
+  :config
+  (autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+  (add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 
 (use-package git-gutter-fringe
   :preface
