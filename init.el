@@ -88,11 +88,11 @@
              clojure-mode
              company
              dired-details
+             evil
              exec-path-from-shell
              expand-region
              flyspell
              geiser
-             git-commit-mode
              git-gutter-fringe
              gitconfig-mode
              gitignore-mode
@@ -110,9 +110,11 @@
              multi-term
              multiple-cursors
              nginx-mode
+             olivetti
              org
              org-bullets
              paredit
+             pdf-tools
              php-mode
              smex
              try
@@ -153,13 +155,6 @@
         org-habit-show-done-always-green t
         org-habit-show-habits-only-for-today t
         org-startup-indented t)
-
-  (use-package org-agenda
-    :config
-    (setq org-agenda-files '("~/org/notes.org"
-                             "~/org/habits.org"))
-    (use-package org-habit)
-    :bind ("C-c a" . org-agenda))
 
   (use-package org-bullets
     :config
@@ -406,7 +401,7 @@
 (global-set-key (kbd "C-c C-d") 'torenord/insert-date)
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "C-x C-j") 'kill-all-buffers)
-(global-set-key (kbd "C-@") 'er/expand-region)
+(global-set-key (kbd "C-c SPC") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "<C-tab>") 'tidy)
 
