@@ -218,7 +218,8 @@
   :mode ("/etc/nginx/sites-*/*" . nginx-mode))
 
 (use-package ace-jump-mode
-  :bind ("M-z" . ace-jump-mode)
+  :bind (("C-M-z" . ace-jump-word-mode)
+         ("M-z" . ace-jump-mode))
   :config
   (setq ace-jump-mode-submode-list
         '(ace-jump-char-mode
@@ -294,7 +295,7 @@
             (lambda ()
               (local-set-key (kbd "C-l") 'torenord/shell-clear)))
 
-  (add-hook 'shell-mode-hook '(lambda () (toggle-truncate-lines t)))
+  (add-hook 'shell-mode-hook '(lambda () (toggle-truncate-lines -1)))
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
   (defun comint-delchar-or-eof-or-kill-buffer (arg)
@@ -379,6 +380,11 @@
   (custom-set-variables
    '(git-gutter:update-interval 1))
   :if (window-system))
+
+(use-package pdf-tools
+  :if (window-system)
+  :config
+  (pdf-tools-install))
 
 (use-package undo-tree
   :config
@@ -544,7 +550,12 @@
               (load-theme 'leuven t)
               (set-face-attribute 'region nil :background "#b3d2f3")
               (set-face-attribute 'show-paren-match nil :background "#b3d2f3")
-              (set-cursor-color "black")))))
+              (set-cursor-color "black")
+
+              (add-hook 'pdf-tools-enabled-hook
+                        (lambda ()
+                          (setq buffer-face-mode-face `(:background "#ccc"))
+                          (buffer-face-mode 1)))))))
    'leuven))
 
 ;; ------------------------------------------------
