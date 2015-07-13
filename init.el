@@ -2,6 +2,9 @@
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
+;; bugfix
+(setq input-method-function 'nil)
+
 (setq user-full-name "Tore Norderud"
       user-mail-address "torenord@uio.no")
 
@@ -85,8 +88,8 @@
 
   (dolist (p
            '(ace-jump-mode
-             clojure-mode
              browse-kill-ring
+             clojure-mode
              company
              dired-details
              evil
@@ -101,6 +104,7 @@
              ido-vertical-mode
              jedi
              js2-mode
+             key-chord
              leuven-theme
              macrostep
              magit
@@ -390,6 +394,15 @@
 (use-package undo-tree
   :config
   (global-undo-tree-mode))
+
+(use-package key-chord
+  :config
+  (key-chord-mode 1)
+  (key-chord-define-global "uu" 'undo-tree-visualize)
+  (key-chord-define-global "xx" 'smex)
+  (key-chord-define-global "yy" 'browse-kill-ring)
+  (key-chord-define-global "qq" 'tidy)
+  )
 
 ;; ### Keybindings ###
 
