@@ -86,6 +86,7 @@
   (dolist (p
            '(ace-jump-mode
              clojure-mode
+             browse-kill-ring
              company
              dired-details
              evil
@@ -396,7 +397,7 @@
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "C-M-n") 'forward-sexp)
 (global-set-key (kbd "C-M-p") 'backward-sexp)
-(global-set-key (kbd "C-.") 'hippie-expand)
+(global-set-key (kbd "C-.") 'company-complete)
 (global-set-key (kbd "M-,") 'goto-init-el)
 (global-set-key (kbd "M-<RET>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "C-c C-e") 'eval-and-replace)
@@ -410,6 +411,9 @@
 (global-set-key (kbd "C-c SPC") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "<C-tab>") 'tidy)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+(global-set-key (kbd "C-0") 'text-scale-adjust)
 
 ;; ### Various ###
 
@@ -430,9 +434,8 @@
   "Replace the preceding sexp with its value."
   (interactive)
   (backward-kill-sexp)
-  (condition-case nil
-      (prin1 (eval (read (current-kill 0)))
-             (current-buffer))))
+  (prin1 (eval (read (current-kill 0)))
+         (current-buffer)))
 
 (defun kill-all-buffers ()
   "Kill all buffers, only leaving *scratch*."
