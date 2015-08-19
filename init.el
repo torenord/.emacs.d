@@ -437,6 +437,8 @@
 (global-set-key (kbd "M-0") 'text-scale-adjust)
 (global-set-key (kbd "C-c d") 'duplicate-thing)
 (global-set-key (kbd "C-c D") 'define-word-at-point)
+(global-set-key (kbd "C-,") 'jump-to-previous-like-this)
+(global-set-key (kbd "C-.") 'jump-to-next-like-this)
 
 ;; ### Various ###
 
@@ -530,6 +532,34 @@
 
 (eval-after-load "geiser" '(setq geiser-active-implementations '(guile)))
 
+;; from https://github.com/larstvei/dot-emacs
+(defun jump-to-symbol-internal (&optional backwardp)
+  "Jumps to the next symbol near the point if such a symbol exists. If BACKWARDP is non-nil it jumps backward."
+  (let* ((point (point))
+         (bounds (find-tag-default-bounds))
+         (beg (car bounds)) (end (cdr bounds))
+         (str (isearch-symbol-regexp (find-tag-default)))
+         (search (if backwardp 'search-backward-regexp
+                   'search-forward-regexp)))
+    (goto-char (if backwardp beg end))
+    (funcall search str nil t)
+    (cond ((<= beg (point) end) (goto-char point))
+          (backwardp (forward-char (- point beg)))
+          (t  (backward-char (- end point))))))
+
+;; from https://github.com/larstvei/dot-emacs
+(defun jump-to-previous-like-this ()
+  "Jumps to the previous occurrence of the symbol at point."
+  (interactive)
+  (jump-to-symbol-internal t))
+
+;; from https://github.com/larstvei/dot-emacs
+(defun jump-to-next-like-this ()
+  "Jumps to the next occurrence of the symbol at point."
+  (interactive)
+  (jump-to-symbol-internal))
+
+;; from https://github.com/larstvei/dot-emacs
 (defun duplicate-thing (comment)
   "Duplicates the current line, or the region if active. If an argument is given, the duplicated region will be commented out."
   (interactive "P")
