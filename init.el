@@ -10,6 +10,7 @@
 
 (setq on-linux (equal system-type 'gnu/linux))
 (setq on-mac (equal system-type 'darwin))
+(setq on-windows (equal system-type 'windows-nt))
 
 ;; ### Modes ###
 
@@ -56,6 +57,10 @@
 (unless (boundp 'user-emacs-directory)
   (setq user-emacs-directory "~/.emacs.d/"))
 
+(setq display-time-default-load-average nil)
+(setq display-time-24hr-format t)
+(display-time-mode t)
+
 ;; from better-defaults.el
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
@@ -91,6 +96,8 @@
              browse-kill-ring
              clojure-mode
              company
+             debbugs
+             define-word
              dired-details
              evil
              exec-path-from-shell
@@ -100,6 +107,7 @@
              git-gutter-fringe
              gitconfig-mode
              gitignore-mode
+             guide-key
              haskell-mode
              ido-vertical-mode
              jedi
@@ -125,7 +133,8 @@
              try
              undo-tree
              use-package
-             web-mode))
+             web-mode
+             yasnippet))
     (when (not (package-installed-p p))
       (package-install p)
       (delete-other-windows))))
@@ -401,8 +410,7 @@
   (key-chord-define-global "uu" 'undo-tree-visualize)
   (key-chord-define-global "xx" 'smex)
   (key-chord-define-global "yy" 'browse-kill-ring)
-  (key-chord-define-global "qq" 'tidy)
-  )
+  (key-chord-define-global "qq" 'tidy))
 
 ;; ### Keybindings ###
 
@@ -413,20 +421,22 @@
 (global-set-key (kbd "C-.") 'company-complete)
 (global-set-key (kbd "M-,") 'goto-init-el)
 (global-set-key (kbd "M-<RET>") 'toggle-frame-fullscreen)
-(global-set-key (kbd "C-c C-e") 'eval-and-replace)
+(global-set-key (kbd "C-c e") 'eval-and-replace)
 (global-set-key (kbd "<C-M-S-up>") 'move-text-up)
 (global-set-key (kbd "<C-M-S-down>") 'move-text-down)
 (global-set-key (kbd "C-M-<return>") 'toggle-window-split)
 (global-set-key (kbd "C-M-<backspace>") 'torenord/rotate-windows)
-(global-set-key (kbd "C-c C-d") 'torenord/insert-date)
+(global-set-key (kbd "C-c q") 'torenord/insert-date)
 (global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (global-set-key (kbd "C-x C-j") 'kill-all-buffers)
 (global-set-key (kbd "C-c SPC") 'er/expand-region)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "<C-tab>") 'tidy)
-(global-set-key (kbd "C-+") 'text-scale-increase)
-(global-set-key (kbd "C--") 'text-scale-decrease)
-(global-set-key (kbd "C-0") 'text-scale-adjust)
+(global-set-key (kbd "M-+") 'text-scale-increase)
+(global-set-key (kbd "M--") 'text-scale-decrease)
+(global-set-key (kbd "M-0") 'text-scale-adjust)
+(global-set-key (kbd "C-c d") 'duplicate-thing)
+(global-set-key (kbd "C-c D") 'define-word-at-point)
 
 ;; ### Various ###
 
@@ -520,6 +530,18 @@
 
 (eval-after-load "geiser" '(setq geiser-active-implementations '(guile)))
 
+(defun duplicate-thing (comment)
+  "Duplicates the current line, or the region if active. If an argument is given, the duplicated region will be commented out."
+  (interactive "P")
+  (save-excursion
+    (let ((start (if (region-active-p) (region-beginning) (point-at-bol)))
+          (end   (if (region-active-p) (region-end) (point-at-eol))))
+      (goto-char end)
+      (unless (region-active-p)
+        (newline))
+      (insert (buffer-substring start end))
+      (when comment (comment-region start end)))))
+
 ;; ### Linux ###
 
 (when on-linux
@@ -533,6 +555,7 @@
 (when on-mac
   (setq ns-alternate-modifier 'none)
   (setq ns-command-modifier 'meta)
+  (setq ns-function-modifier 'hyper)
 
   (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
 
@@ -546,6 +569,12 @@
       (set-face-attribute 'default nil :height 135)
       (when (member "Monaco" (font-family-list))
         (set-face-attribute 'default nil :family "Monaco")))))
+
+;; ### Windows ###
+
+(when on-windows
+  (set-face-attribute 'default nil :height 185)
+  (set-face-attribute 'default nil :family "Lucida Console"))
 
 ;; ### Apperance ###
 
