@@ -2,7 +2,7 @@
 (unless noninteractive
   (message "Loading %s..." load-file-name))
 
-;; bugfix
+;; bugfix in 25.0.50.1
 (setq input-method-function 'nil)
 
 (setq user-full-name "Tore Norderud"
@@ -418,7 +418,6 @@
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "C-M-n") 'forward-sexp)
 (global-set-key (kbd "C-M-p") 'backward-sexp)
-(global-set-key (kbd "C-.") 'company-complete)
 (global-set-key (kbd "M-,") 'goto-init-el)
 (global-set-key (kbd "M-<RET>") 'toggle-frame-fullscreen)
 (global-set-key (kbd "C-c e") 'eval-and-replace)
@@ -437,7 +436,7 @@
 (global-set-key (kbd "M-0") 'text-scale-adjust)
 (global-set-key (kbd "C-c d") 'duplicate-thing)
 (global-set-key (kbd "C-c D") 'define-word-at-point)
-(global-set-key (kbd "C-,") 'jump-to-previous-like-this)
+(global-set-key (kbd "C-:") 'jump-to-previous-like-this)
 (global-set-key (kbd "C-.") 'jump-to-next-like-this)
 
 ;; ### Various ###
