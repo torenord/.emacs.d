@@ -3,10 +3,10 @@
   (message "Loading %s..." load-file-name))
 
 ;; bugfix in 25.0.50.1
-(setq input-method-function 'nil)
+(setq input-method-function nil)
 
 (setq user-full-name "Tore Norderud"
-      user-mail-address "torenord@uio.no")
+      user-mail-address "torenord@ifi.uio.no")
 
 (setq on-linux (equal system-type 'gnu/linux))
 (setq on-mac (equal system-type 'darwin))
