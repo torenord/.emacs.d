@@ -1,5 +1,6 @@
 ;; bugfix in 25.0.50.1
-(setq input-method-function nil)
+(when (= emacs-major-version 25)
+  (setq input-method-function nil))
 
 (setq user-full-name "Tore Norderud"
       user-mail-address "torenord@ifi.uio.no")
@@ -393,12 +394,17 @@
 
 (use-package pdf-tools
   :if (window-system)
+  :mode "\\.pdf\\'"
   :config
   (pdf-tools-install))
 
 (use-package undo-tree
   :config
   (global-undo-tree-mode))
+
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
 
 (use-package key-chord
   :config
