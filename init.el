@@ -1,7 +1,3 @@
-(defconst emacs-start-time (current-time))
-(unless noninteractive
-  (message "Loading %s..." load-file-name))
-
 ;; bugfix in 25.0.50.1
 (setq input-method-function nil)
 
@@ -103,6 +99,7 @@
              exec-path-from-shell
              expand-region
              flyspell
+             focus
              geiser
              git-gutter-fringe
              gitconfig-mode
@@ -412,33 +409,6 @@
   (key-chord-define-global "yy" 'browse-kill-ring)
   (key-chord-define-global "qq" 'tidy))
 
-;; ### Keybindings ###
-
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
-(global-set-key (kbd "C-M-n") 'forward-sexp)
-(global-set-key (kbd "C-M-p") 'backward-sexp)
-(global-set-key (kbd "M-,") 'goto-init-el)
-(global-set-key (kbd "M-<RET>") 'toggle-frame-fullscreen)
-(global-set-key (kbd "C-c e") 'eval-and-replace)
-(global-set-key (kbd "<C-M-S-up>") 'move-text-up)
-(global-set-key (kbd "<C-M-S-down>") 'move-text-down)
-(global-set-key (kbd "C-M-<return>") 'toggle-window-split)
-(global-set-key (kbd "C-M-<backspace>") 'torenord/rotate-windows)
-(global-set-key (kbd "C-c q") 'torenord/insert-date)
-(global-set-key (kbd "M-j") (lambda () (interactive) (join-line -1)))
-(global-set-key (kbd "C-x C-j") 'kill-all-buffers)
-(global-set-key (kbd "C-c SPC") 'er/expand-region)
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
-(global-set-key (kbd "<C-tab>") 'tidy)
-(global-set-key (kbd "M-+") 'text-scale-increase)
-(global-set-key (kbd "M--") 'text-scale-decrease)
-(global-set-key (kbd "M-0") 'text-scale-adjust)
-(global-set-key (kbd "C-c d") 'duplicate-thing)
-(global-set-key (kbd "C-c D") 'define-word-at-point)
-(global-set-key (kbd "C-:") 'jump-to-previous-like-this)
-(global-set-key (kbd "C-.") 'jump-to-next-like-this)
-
 ;; ### Various ###
 
 (defun tidy ()
@@ -624,6 +594,7 @@
               (load-theme 'leuven t)
               (set-face-attribute 'region nil :background "#b3d2f3")
               (set-face-attribute 'show-paren-match nil :background "#b3d2f3")
+              (set-face-attribute 'fringe nil :background "grey95")
               (set-cursor-color "black")
 
               (add-hook 'pdf-tools-enabled-hook
@@ -632,12 +603,37 @@
                           (buffer-face-mode 1)))))))
    'leuven))
 
-;; ------------------------------------------------
+;; ### Keybindings ###
 
-(add-hook 'after-init-hook
-          `(lambda ()
-             (let ((elapsed (float-time (time-subtract (current-time)
-                                                       emacs-start-time))))
-               (message "Loading %s...done (%.3fs)"
-                        ,load-file-name elapsed)))
-          t)
+(defvar custom-bindings-map (make-keymap)
+  "A keymap for custom bindings.")
+
+(define-key custom-bindings-map (kbd "M-n") 'forward-paragraph)
+(define-key custom-bindings-map (kbd "M-p") 'backward-paragraph)
+(define-key custom-bindings-map (kbd "C-M-n") 'forward-sexp)
+(define-key custom-bindings-map (kbd "C-M-p") 'backward-sexp)
+(define-key custom-bindings-map (kbd "M-,") 'goto-init-el)
+(define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
+(define-key custom-bindings-map (kbd "C-c C-e") 'eval-and-replace)
+(define-key custom-bindings-map (kbd "<C-M-S-up>") 'move-text-up)
+(define-key custom-bindings-map (kbd "<C-M-S-down>") 'move-text-down)
+(define-key custom-bindings-map (kbd "C-M-<return>") 'toggle-window-split)
+(define-key custom-bindings-map (kbd "C-M-<backspace>") 'torenord/rotate-windows)
+(define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
+(define-key custom-bindings-map (kbd "M-j") (lambda () (interactive) (join-line -1)))
+(define-key custom-bindings-map (kbd "C-x C-j") 'kill-all-buffers)
+(define-key custom-bindings-map (kbd "C-c SPC") 'er/expand-region)
+(define-key custom-bindings-map (kbd "C-x k") 'kill-this-buffer)
+(define-key custom-bindings-map (kbd "<C-tab>") 'tidy)
+(define-key custom-bindings-map (kbd "M-+") 'text-scale-increase)
+(define-key custom-bindings-map (kbd "M--") 'text-scale-decrease)
+(define-key custom-bindings-map (kbd "M-0") 'text-scale-adjust)
+(define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
+(define-key custom-bindings-map (kbd "C-c D") 'define-word-at-point)
+(define-key custom-bindings-map (kbd "C-:") 'jump-to-previous-like-this)
+(define-key custom-bindings-map (kbd "C-.") 'jump-to-next-like-this)
+
+(define-minor-mode custom-bindings-mode
+  "A mode that activates custom-bindings."
+  t nil custom-bindings-map)
+
