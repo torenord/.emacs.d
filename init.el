@@ -93,7 +93,6 @@
              clojure-mode
              company
              debbugs
-             define-word
              dired-details
              evil
              exec-path-from-shell
@@ -608,29 +607,41 @@
 (defvar custom-bindings-map (make-keymap)
   "A keymap for custom bindings.")
 
+;;; Goto init.el
+(define-key custom-bindings-map (kbd "M-,") 'goto-init-el)
+
+;;; Go fullscreen
+(define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
+
+;;; Adjust text-scale
+(define-key custom-bindings-map (kbd "M-+") 'text-scale-increase)
+(define-key custom-bindings-map (kbd "M--") 'text-scale-decrease)
+(define-key custom-bindings-map (kbd "M-0") 'text-scale-adjust)
+
+(define-key custom-bindings-map (kbd "C-æ")  'mc/mark-next-like-this)
+(define-key custom-bindings-map (kbd "C-Æ")  'mc/mark-all-like-this)
+
+(define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
+
+(define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
+
 (define-key custom-bindings-map (kbd "M-n") 'forward-paragraph)
 (define-key custom-bindings-map (kbd "M-p") 'backward-paragraph)
-(define-key custom-bindings-map (kbd "C-M-n") 'forward-sexp)
-(define-key custom-bindings-map (kbd "C-M-p") 'backward-sexp)
-(define-key custom-bindings-map (kbd "M-,") 'goto-init-el)
-(define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
+
 (define-key custom-bindings-map (kbd "C-c C-e") 'eval-and-replace)
-(define-key custom-bindings-map (kbd "<C-M-S-up>") 'move-text-up)
-(define-key custom-bindings-map (kbd "<C-M-S-down>") 'move-text-down)
+
+(define-key custom-bindings-map (kbd "<M-S-up>") 'move-text-up)
+(define-key custom-bindings-map (kbd "<M-S-down>") 'move-text-down)
+
 (define-key custom-bindings-map (kbd "C-M-<return>") 'toggle-window-split)
 (define-key custom-bindings-map (kbd "C-M-<backspace>") 'torenord/rotate-windows)
-(define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
 (define-key custom-bindings-map (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (define-key custom-bindings-map (kbd "C-x C-j") 'kill-all-buffers)
 (define-key custom-bindings-map (kbd "C-c SPC") 'er/expand-region)
 (define-key custom-bindings-map (kbd "C-x k") 'kill-this-buffer)
 (define-key custom-bindings-map (kbd "<C-tab>") 'tidy)
-(define-key custom-bindings-map (kbd "M-+") 'text-scale-increase)
-(define-key custom-bindings-map (kbd "M--") 'text-scale-decrease)
-(define-key custom-bindings-map (kbd "M-0") 'text-scale-adjust)
-(define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
-(define-key custom-bindings-map (kbd "C-c D") 'define-word-at-point)
-(define-key custom-bindings-map (kbd "C-:") 'jump-to-previous-like-this)
+
+(define-key custom-bindings-map (kbd "C-,") 'jump-to-previous-like-this)
 (define-key custom-bindings-map (kbd "C-.") 'jump-to-next-like-this)
 
 (define-minor-mode custom-bindings-mode
