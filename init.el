@@ -103,6 +103,7 @@
              geiser
              git-gutter-fringe
              gitconfig-mode
+             eval-sexp-fu
              gitignore-mode
              guide-key
              haskell-mode
@@ -201,7 +202,6 @@
   (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode))
 
 (use-package python
-  :defer
   :init
   (require 'jedi)
   (add-hook 'python-mode-hook 'jedi:setup)
@@ -223,7 +223,7 @@
   (setq calendar-week-start-day 1))
 
 (use-package macrostep
-  :bind ("C-c e m" . macrostep-expand))
+  :bind ("C-c x" . macrostep-expand))
 
 (use-package nginx-mode
   :mode ("/etc/nginx/sites-*/*" . nginx-mode))
@@ -360,6 +360,9 @@
 (use-package ido-vertical-mode
   :config
   (ido-vertical-mode 1))
+
+(use-package ledger-mode
+  :mode "\\.ledger\\'")
 
 (use-package multiple-cursors
   :bind (("C-æ" . mc/mark-next-like-this)
@@ -549,7 +552,6 @@
 ;; ### Linux ###
 
 (when on-linux
-  (setq x-super-keysym 'meta)
   (set-face-attribute 'default nil
                       :height 90
                       :family "Liberation Mono"))
