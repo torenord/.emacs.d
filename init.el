@@ -289,6 +289,8 @@
   :bind (("C-z" . toggle-shell)
          ("C-x C-z" . toggle-shell))
   :config
+  (setq system-uses-terminfo nil)
+
   (setq dirtrack-list '("λ \\([^ ]+\\) " 1))
   (add-hook 'shell-mode-hook 'dirtrack-mode)
 
@@ -439,12 +441,6 @@
   (prin1 (eval (read (current-kill 0)))
          (current-buffer)))
 
-(defun kill-all-buffers ()
-  "Kill all buffers, only leaving *scratch*."
-  (interactive)
-  (mapcar (lambda (x) (kill-buffer x)) (buffer-list))
-  (delete-other-windows))
-
 (defun toggle-window-split ()
   (interactive)
   (if (= (count-windows) 2)
@@ -549,6 +545,37 @@
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
 
+;;; Java byte code
+
+(add-to-list 'file-name-handler-alist '("\\.class$" . javap-handler))
+
+(defun javap-handler (op &rest args)
+  "Handle .class files by putting the output of javap in the buffer."
+  (cond
+   ((eq op 'get-file-buffer)
+    (let ((file (car args)))
+      (with-current-buffer (create-file-buffer file)
+        (call-process "javap" nil (current-buffer) nil "-verbose"
+                      "-classpath" (file-name-directory file)
+                      (file-name-sans-extension
+                       (file-name-nondirectory file)))
+        (setq buffer-file-name file)
+        (setq buffer-read-only t)
+        (set-buffer-modified-p nil)
+        (goto-char (point-min))
+        (java-mode)
+        (current-buffer))))
+   ((javap-handler-real op args))))
+
+(defun javap-handler-real (operation args)
+  "Run the real handler without the javap handler installed."
+  (let ((inhibit-file-name-handlers
+         (cons 'javap-handler
+               (and (eq inhibit-file-name-operation operation)
+                    inhibit-file-name-handlers)))
+        (inhibit-file-name-operation operation))
+    (apply operation args)))
+
 ;; ### Linux ###
 
 (when on-linux
@@ -572,9 +599,9 @@
     (menu-bar-mode 1)
 
     (when (fboundp 'font-family-list)
-      (set-face-attribute 'default nil :height 135)
-      (when (member "Monaco" (font-family-list))
-        (set-face-attribute 'default nil :family "Monaco")))))
+      (set-face-attribute 'default nil :height 150)
+      (when (member "Source Code Pro" (font-family-list))
+        (set-face-attribute 'default nil :family "Source Code Pro")))))
 
 ;; ### Windows ###
 
@@ -584,33 +611,54 @@
 
 ;; ### Apperance ###
 
+(defadvice load-theme
+    (before disable-before-load (theme &optional no-confirm no-enable) activate)
+  (mapc 'disable-theme custom-enabled-themes))
+
+(defun setup-leuven ()
+  (load-theme 'leuven t)
+
+  (set-face-attribute 'region nil :background "#b3d2f3")
+  (set-face-attribute 'show-paren-match nil :background "#b3d2f3")
+  (set-face-attribute 'fringe nil :background "grey95")
+  (set-cursor-color "black")
+
+  (add-hook 'pdf-tools-enabled-hook
+            (lambda ()
+              (setq buffer-face-mode-face `(:background "#ccc"))
+              (buffer-face-mode 1))))
+
+(defun setup-molokai ()
+  (load-theme 'molokai t)
+
+  (set-cursor-color "#fff")
+  (set-face-attribute 'show-paren-match nil :background "#aaa")
+  (set-face-attribute 'mode-line nil :background "#888" :box nil)
+  (set-face-attribute 'mode-line-inactive nil :background "#000" :box nil)
+  (set-face-attribute 'region nil :background "#888"))
+
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
-  ((lambda (theme)
-     (cond ((equal theme 'molokai)
-            (progn
-              (load-theme 'molokai t)
-              (set-cursor-color "#fff")
-              (set-face-attribute 'show-paren-match nil :background "#aaa")
-              (set-face-attribute 'mode-line nil :background "#888" :box nil)
-              (set-face-attribute 'mode-line-inactive nil :background "#000" :box nil)
-              (set-face-attribute 'region nil :background "#888")))
-           ((equal theme 'leuven)
-            (progn
-              (load-theme 'leuven t)
-              (set-face-attribute 'region nil :background "#b3d2f3")
-              (set-face-attribute 'show-paren-match nil :background "#b3d2f3")
-              (set-face-attribute 'fringe nil :background "grey95")
-              (set-cursor-color "black")
+  (setup-leuven)
 
-              (add-hook 'pdf-tools-enabled-hook
-                        (lambda ()
-                          (setq buffer-face-mode-face `(:background "#ccc"))
-                          (buffer-face-mode 1)))))))
-   'leuven))
+  (defun cycle-themes ()
+    "Returns a function that lets you cycle your themes."
+    (lexical-let ((themes '#1=(leuven molokai . #1#)))
+      (lambda ()
+        (interactive)
+        (let ((theme (car (setq themes (cdr themes)))))
+          (cond ((eq theme 'leuven)
+                 (setup-leuven))
+                ((eq theme 'molokai)
+                 (setup-molokai)))))))
+
+  (global-set-key (kbd "C-c .") (cycle-themes)))
 
 ;; ### Keybindings ###
+
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
 
 (defvar custom-bindings-map (make-keymap)
   "A keymap for custom bindings.")
@@ -633,10 +681,7 @@
 
 (define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
 
-(define-key custom-bindings-map (kbd "M-n") 'forward-paragraph)
-(define-key custom-bindings-map (kbd "M-p") 'backward-paragraph)
-
-(define-key custom-bindings-map (kbd "C-c C-e") 'eval-and-replace)
+(define-key custom-bindings-map (kbd "C-c e") 'eval-and-replace)
 
 (define-key custom-bindings-map (kbd "<M-S-up>") 'move-text-up)
 (define-key custom-bindings-map (kbd "<M-S-down>") 'move-text-down)
@@ -644,8 +689,8 @@
 (define-key custom-bindings-map (kbd "C-M-<return>") 'toggle-window-split)
 (define-key custom-bindings-map (kbd "C-M-<backspace>") 'torenord/rotate-windows)
 (define-key custom-bindings-map (kbd "M-j") (lambda () (interactive) (join-line -1)))
-(define-key custom-bindings-map (kbd "C-x C-j") 'kill-all-buffers)
-(define-key custom-bindings-map (kbd "C-c SPC") 'er/expand-region)
+(define-key custom-bindings-map (kbd "C-x C-j") 'desktop-clear)
+(global-set-key (kbd "C-c SPC") 'er/expand-region)
 (define-key custom-bindings-map (kbd "C-x k") 'kill-this-buffer)
 (define-key custom-bindings-map (kbd "<C-tab>") 'tidy)
 
