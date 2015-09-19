@@ -1,9 +1,10 @@
-;; bugfix in 25.0.50.1
-(when (= emacs-major-version 25)
-  (setq input-method-function nil))
-
-(setq user-full-name "Tore Norderud"
-      user-mail-address "torenord@ifi.uio.no")
+;;; Load private.el if file exists.
+(add-hook
+ 'after-init-hook
+ (lambda ()
+   (let ((private-file (concat user-emacs-directory "private.el")))
+     (when (file-exists-p private-file)
+       (load-file private-file)))))
 
 (setq on-linux (equal system-type 'gnu/linux))
 (setq on-mac (equal system-type 'darwin))
@@ -700,4 +701,3 @@
 (define-minor-mode custom-bindings-mode
   "A mode that activates custom-bindings."
   t nil custom-bindings-map)
-
