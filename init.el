@@ -36,8 +36,6 @@
 (setq save-interprogram-paste-before-kill t)
 (setq truncate-partial-width-windows nil)
 (setq load-prefer-newer t)
-(setq gc-cons-threshold 50000000)
-(setq large-file-warning-threshold 100000000)
 
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
@@ -90,12 +88,12 @@
     (package-refresh-contents))
 
   (dolist (p
-           '(ace-jump-mode
-             browse-kill-ring
+           '(browse-kill-ring
              clojure-mode
+             cider
              company
-             debbugs
              dired-details
+             eval-sexp-fu
              evil
              exec-path-from-shell
              expand-region
@@ -104,10 +102,10 @@
              geiser
              git-gutter-fringe
              gitconfig-mode
-             eval-sexp-fu
              gitignore-mode
              guide-key
              haskell-mode
+             helm
              ido-vertical-mode
              jedi
              js2-mode
@@ -128,7 +126,6 @@
              paredit
              pdf-tools
              php-mode
-             smex
              try
              undo-tree
              use-package
@@ -229,15 +226,6 @@
 (use-package nginx-mode
   :mode ("/etc/nginx/sites-*/*" . nginx-mode))
 
-(use-package ace-jump-mode
-  :bind (("C-M-z" . ace-jump-word-mode)
-         ("M-z" . ace-jump-mode))
-  :config
-  (setq ace-jump-mode-submode-list
-        '(ace-jump-char-mode
-          ace-jump-word-mode
-          ace-jump-line-mode)))
-
 (use-package web-mode
   :mode ("\\.php\\'"
          "\\.html\\'"
@@ -335,27 +323,13 @@
         (shell)
         (set-process-query-on-exit-flag (get-process "shell") nil)))))
 
-(global-set-key (kbd "C-c C-m") 'execute-extended-command)
 (global-set-key (kbd "C-x C-m") 'execute-extended-command)
-(global-set-key (kbd "C-x m") 'execute-extended-command)
 
-(use-package smex
-  :bind (("M-x" . smex)
-         ("C-c C-m" . smex)
-         ("C-x C-m" . smex)
-         ("C-x m" . smex))
-  :config
-  (defadvice smex (around space-inserts-hyphen activate compile)
-    (let ((ido-cannot-complete-command
-           `(lambda ()
-              (interactive)
-              (if (string= " " (this-command-keys))
-                  (insert ?-)
-                (funcall ,ido-cannot-complete-command)))))
-      ad-do-it)))
+(use-package helm
+  :bind (("M-x" . helm-M-x)
+         ("C-x C-m" . helm-M-x)))
 
 (use-package paren
-  :defer 1
   :config
   (setq show-paren-delay 0)
   (show-paren-mode 1))
@@ -416,7 +390,6 @@
   :config
   (key-chord-mode 1)
   (key-chord-define-global "uu" 'undo-tree-visualize)
-  (key-chord-define-global "xx" 'smex)
   (key-chord-define-global "yy" 'browse-kill-ring)
   (key-chord-define-global "qq" 'tidy))
 
