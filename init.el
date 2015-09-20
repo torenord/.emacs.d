@@ -360,17 +360,15 @@
   (add-hook 'scheme-mode-hook           #'enable-paredit-mode))
 
 (use-package git-gutter-fringe
+  :if (window-system)
+
   :preface
   (global-git-gutter-mode 1)
-  (set-face-foreground 'git-gutter:modified "#c0c")
-  (set-face-foreground 'git-gutter:added "#0c0")
-  (set-face-foreground 'git-gutter:deleted "#c00")
-  (set-face-background 'git-gutter:modified "#c0c")
-  (set-face-background 'git-gutter:added "#0c0")
-  (set-face-background 'git-gutter:deleted "#c00")
-  (custom-set-variables
-   '(git-gutter:update-interval 1))
-  :if (window-system))
+  (dolist (p '((git-gutter:added    . "#0c0")
+               (git-gutter:deleted  . "#c00")
+               (git-gutter:modified . "#c0c")))
+    (set-face-foreground (car p) (cdr p))
+    (set-face-background (car p) (cdr p))))
 
 (use-package pdf-tools
   :if (window-system)
