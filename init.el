@@ -106,6 +106,7 @@
              guide-key
              haskell-mode
              helm
+             helm-swoop
              ido-vertical-mode
              jedi
              js2-mode
@@ -140,6 +141,7 @@
       `nil))
 
 (use-package ido
+  :disabled
   :init
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -326,8 +328,21 @@
 (global-set-key (kbd "C-x C-m") 'execute-extended-command)
 
 (use-package helm
-  :bind (("M-x" . helm-M-x)
-         ("C-x C-m" . helm-M-x)))
+  :config
+  (setq helm-split-window-in-side-p t
+      helm-M-x-fuzzy-match t
+      helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match t
+      helm-move-to-line-cycle-in-source t
+      projectile-completion-system 'helm)
+  :bind (("C-c h" . helm-command-prefix)
+         ("M-x" . helm-M-x)
+         ("C-x C-m" . helm-M-x)
+         ("M-y" . helm-show-kill-ring)
+         ("C-x b" . helm-mini)
+         ("C-x C-f" . helm-find-files)
+         ("M-i" . helm-swoop)
+         ("M-I" . helm-multi-swoop-all)))
 
 (use-package paren
   :config
@@ -335,6 +350,7 @@
   (show-paren-mode 1))
 
 (use-package ido-vertical-mode
+  :disabled
   :config
   (ido-vertical-mode 1))
 
@@ -342,7 +358,8 @@
   :mode "\\.ledger\\'")
 
 (use-package multiple-cursors
-  :bind (("C-æ" . mc/mark-next-like-this)
+  :bind (("C-\\" . mc/mark-next-like-this)
+         ("C-æ" . mc/mark-next-like-this)
          ("C-Æ" . mc/mark-all-like-this)))
 
 (use-package company
@@ -629,11 +646,12 @@
 
 ;; ### Keybindings ###
 
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
-
 (defvar custom-bindings-map (make-keymap)
   "A keymap for custom bindings.")
+
+;;; Jump by paragraph
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
 
 ;;; Goto init.el
 (define-key custom-bindings-map (kbd "M-,") 'goto-init-el)
@@ -662,7 +680,7 @@
 (define-key custom-bindings-map (kbd "C-M-<backspace>") 'torenord/rotate-windows)
 (define-key custom-bindings-map (kbd "M-j") (lambda () (interactive) (join-line -1)))
 (define-key custom-bindings-map (kbd "C-x C-j") 'desktop-clear)
-(global-set-key (kbd "C-c SPC") 'er/expand-region)
+(global-set-key (kbd "C-ø") 'er/expand-region)
 (define-key custom-bindings-map (kbd "C-x k") 'kill-this-buffer)
 (define-key custom-bindings-map (kbd "<C-tab>") 'tidy)
 
