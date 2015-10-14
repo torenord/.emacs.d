@@ -6,10 +6,6 @@
      (when (file-exists-p private-file)
        (load-file private-file)))))
 
-(setq on-linux (equal system-type 'gnu/linux))
-(setq on-mac (equal system-type 'darwin))
-(setq on-windows (equal system-type 'windows-nt))
-
 ;; ### Modes ###
 
 ;; Disable modes
@@ -152,7 +148,7 @@
   :config
   (ido-mode 1)
 
-  (when on-mac
+  (when (equal system-type 'darwin)
     (add-to-list 'ido-ignore-files "\\.DS_Store")))
 
 (use-package org-mode
@@ -567,14 +563,14 @@
 
 ;; ### Linux ###
 
-(when on-linux
+(when (equal system-type 'gnu/linux)
   (set-face-attribute 'default nil
                       :height 90
                       :family "Liberation Mono"))
 
 ;; ### Mac ###
 
-(when on-mac
+(when (equal system-type 'darwin)
   (setq ns-alternate-modifier 'none)
   (setq ns-command-modifier 'meta)
   (setq ns-function-modifier 'hyper)
@@ -594,7 +590,7 @@
 
 ;; ### Windows ###
 
-(when on-windows
+(when (equal system-type 'windows-nt)
   (set-face-attribute 'default nil :height 185)
   (set-face-attribute 'default nil :family "Lucida Console"))
 
