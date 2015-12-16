@@ -1,4 +1,4 @@
-;;; Load private.el if file exists.
+;;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
 (add-hook
  'after-init-hook
  (lambda ()
@@ -28,7 +28,7 @@
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
-(setq visible-bell t)
+(setq ring-bell-function 'ignore)
 (setq save-interprogram-paste-before-kill t)
 (setq truncate-partial-width-windows nil)
 (setq load-prefer-newer t)
@@ -88,6 +88,7 @@
              clojure-mode
              cider
              company
+             company-jedi
              dired-details
              eval-sexp-fu
              evil
@@ -101,10 +102,10 @@
              gitignore-mode
              guide-key
              haskell-mode
+             go-mode
              helm
              helm-swoop
              ido-vertical-mode
-             jedi
              js2-mode
              key-chord
              leuven-theme
@@ -199,7 +200,7 @@
 
 (use-package python
   :init
-  (require 'jedi)
+  (require 'company-jedi)
   (add-hook 'python-mode-hook 'jedi:setup)
   (setq jedi:complete-on-dot t))
 
@@ -638,7 +639,7 @@
                 ((eq theme 'molokai)
                  (setup-molokai)))))))
 
-  (global-set-key (kbd "C-c .") (cycle-themes)))
+  (global-set-key (kbd "<f12>") (cycle-themes)))
 
 ;; ### Keybindings ###
 
