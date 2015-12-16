@@ -1,13 +1,3 @@
-;;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
-(add-hook
- 'after-init-hook
- (lambda ()
-   (let ((private-file (concat user-emacs-directory "private.el")))
-     (when (file-exists-p private-file)
-       (load-file private-file)))))
-
-;; ### Modes ###
-
 ;; Disable modes
 (dolist (mode
          '(menu-bar-mode
@@ -23,8 +13,7 @@
            column-number-mode))
   (if (fboundp mode) (funcall mode 1)))
 
-;; ### Sanity ###
-
+;; Sane defaults
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
@@ -39,6 +28,7 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Enable disabled commands
 (put 'set-goal-column 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -57,16 +47,14 @@
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
-;; --- utf-8 ---
-
+;; UTF-8
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; --- locale ---
-
+;; Locale
 (set-locale-environment "no_NO.UTF-8")
 
 ;; ### Packages ###
@@ -569,13 +557,14 @@
                       :height 90
                       :family "Liberation Mono"))
 
-;; ### Mac ###
+;; Mac OS X
 
 (when (equal system-type 'darwin)
   (setq ns-alternate-modifier 'none)
   (setq ns-command-modifier 'meta)
   (setq ns-function-modifier 'hyper)
 
+  ;; Fix comma on Apple USB Keyboard
   (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
 
   (setq delete-by-moving-to-trash t
@@ -687,3 +676,10 @@
 (define-minor-mode custom-bindings-mode
   "A mode that activates custom-bindings."
   t nil custom-bindings-map)
+;;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
+(add-hook
+ 'after-init-hook
+ (lambda ()
+   (let ((private-file (concat user-emacs-directory "private.el")))
+     (when (file-exists-p private-file)
+       (load-file private-file)))))
