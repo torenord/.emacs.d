@@ -86,6 +86,7 @@
            paredit
            pdf-tools
            php-mode
+           sml-mode
            try
            undo-tree
            use-package
@@ -199,6 +200,7 @@
   (exec-path-from-shell-initialize))
 
 (use-package undo-tree
+  :diminish undo-tree-mode
   :config
   (global-undo-tree-mode))
 
