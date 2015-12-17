@@ -73,6 +73,8 @@
            expand-region
            focus
            git-gutter-fringe
+           helm
+           helm-swoop
            leuven-theme
            macrostep
            magit
@@ -113,8 +115,22 @@
   :bind (("C-ø" . mc/mark-next-like-this)
          ("C-Ø" . mc/mark-all-like-this)))
 
+(use-package helm
+  :demand
+  :bind (("M-y" . helm-show-kill-ring)
+         ("C-c h g" . helm-google-suggest)
+         ("C-c h o" . helm-occur)
+         ("C-c h" . helm-command-prefix)
+         ("M-i" . helm-swoop))
+  :config
+  (require 'helm-config)
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (helm-mode 1)
+  )
+
 (use-package expand-region
-  :bind (("C-æ" . er/expand-region)))
+  :bind ("C-æ" . er/expand-region))
 
 (use-package paren
   :config
@@ -148,6 +164,11 @@
 (use-package company
   :diminish company-mode
   :config
+  (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "<tab>") 'company-complete)
+
   (global-company-mode t))
 
 (use-package ledger-mode
@@ -174,20 +195,6 @@
     (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
   :bind ("C-c c" . org-capture))
-
-(use-package ido
-  :init
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-auto-merge-work-directories-length -1
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point nil)
-
-  :config
-  (ido-mode 1)
-
-  (when (equal system-type 'darwin)
-    (add-to-list 'ido-ignore-files "\\.DS_Store")))
 
 (use-package uniquify
   :config
