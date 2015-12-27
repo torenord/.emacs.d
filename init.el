@@ -18,6 +18,8 @@
   (if (fboundp mode) (funcall mode 1)))
 
 ;; Sane defaults
+(put 'inhibit-startup-echo-area-message 'saved-value
+     (setq inhibit-startup-echo-area-message (user-login-name)))
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
@@ -102,9 +104,8 @@
 (require 'use-package)
 
 (use-package magit
-  :bind ("C-c m" . magit-status)
-  :init
-  (setq magit-last-seen-setup-instructions "1.4.0")
+  :bind (("C-x g" . magit-status)
+         ("C-c m" . magit-status))
   :config
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
@@ -116,6 +117,7 @@
          ("C-Ø" . mc/mark-all-like-this)))
 
 (use-package helm
+  :diminish helm-mode
   :demand
   :bind (("M-y" . helm-show-kill-ring)
          ("C-c h g" . helm-google-suggest)
@@ -124,10 +126,14 @@
          ("M-i" . helm-swoop))
   :config
   (require 'helm-config)
+
   (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
   (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-  (helm-mode 1)
-  )
+
+  (setq helm-ff-skip-boring-files t)
+  (setq helm-mode-fuzzy-match t)
+
+  (helm-mode 1))
 
 (use-package expand-region
   :bind ("C-æ" . er/expand-region))
@@ -412,7 +418,7 @@ argument is given, the duplicated region will be commented out."
   (set-face-attribute 'default nil :height 185)
   (set-face-attribute 'default nil :family "Lucida Console"))
 
-;; --- Apperance ---
+;;; --- Apperance ---
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
@@ -473,7 +479,7 @@ argument is given, the duplicated region will be commented out."
 ;; Go fullscreen
 (define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
 
-;;; Adjust text-scale
+;; Adjust text-scale
 (define-key custom-bindings-map (kbd "M-+") 'text-scale-increase)
 (define-key custom-bindings-map (kbd "M--") 'text-scale-decrease)
 (define-key custom-bindings-map (kbd "M-0") 'text-scale-adjust)
@@ -499,7 +505,7 @@ argument is given, the duplicated region will be commented out."
 
 ;;; --- Private ---
 
-;;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
+;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
 (add-hook
  'after-init-hook
  (lambda ()
