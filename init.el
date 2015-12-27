@@ -58,9 +58,7 @@
 
 (setq package-archives
       '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("marmalade" . "https://marmalade-repo.org/packages/")
-        ("melpa" . "http://melpa.milkbox.net/packages/")
-        ("org" . "http://orgmode.org/elpa/")))
+        ("melpa" . "http://melpa.milkbox.net/packages/")))
 
 (package-initialize)
 
@@ -239,8 +237,6 @@
   :bind (("C-z" . toggle-shell)
          ("C-x C-z" . toggle-shell))
   :config
-  (setq system-uses-terminfo nil)
-
   (setq dirtrack-list '("λ \\([^ ]+\\) " 1))
   (add-hook 'shell-mode-hook 'dirtrack-mode)
 
