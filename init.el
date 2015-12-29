@@ -422,27 +422,19 @@ argument is given, the duplicated region will be commented out."
                 (setq buffer-face-mode-face `(:background "#ccc"))
                 (buffer-face-mode 1))))
 
-  (defun setup-molokai ()
-    (load-theme 'molokai t)
-
-    (set-cursor-color "#fff")
-    (set-face-attribute 'show-paren-match nil :background "#aaa")
-    (set-face-attribute 'mode-line nil :background "#888" :box nil)
-    (set-face-attribute 'mode-line-inactive nil :background "#000" :box nil)
-    (set-face-attribute 'region nil :background "#888"))
+  (defun setup-cyberpunk ()
+    (load-theme 'cyberpunk t))
 
   (setup-leuven)
 
   (defun cycle-themes ()
     "Returns a function that lets you cycle your themes."
-    (lexical-let ((themes '#1=(leuven molokai . #1#)))
+    (lexical-let ((themes '#1=(leuven cyberpunk . #1#)))
       (lambda ()
         (interactive)
         (let ((theme (car (setq themes (cdr themes)))))
-          (cond ((eq theme 'leuven)
-                 (setup-leuven))
-                ((eq theme 'molokai)
-                 (setup-molokai)))))))
+          (cond ((eq theme 'leuven) (setup-leuven))
+                ((eq theme 'cyberpunk) (setup-cyberpunk)))))))
 
   (global-set-key (kbd "<f12>") (cycle-themes)))
 
