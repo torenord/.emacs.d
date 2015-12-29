@@ -56,63 +56,84 @@
 
 (require 'package)
 
-(setq package-archives
-      '(("gnu" . "http://elpa.gnu.org/packages/")
-        ("melpa" . "http://melpa.milkbox.net/packages/")))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 (package-initialize)
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(dolist (p
-         '(cider
-           company
-           dired-details
-           exec-path-from-shell
-           expand-region
-           focus
-           git-gutter-fringe
-           helm
-           helm-swoop
-           leuven-theme
-           macrostep
-           magit
-           markdown-mode
-           maude-mode
-           molokai-theme
-           move-text
-           multi-term
-           multiple-cursors
-           org-bullets
-           paredit
-           pdf-tools
-           php-mode
-           sml-mode
-           try
-           undo-tree
-           use-package
-           web-mode))
-  (when (not (package-installed-p p))
-    (package-install p)
-    (delete-other-windows)))
-
-;;; --- Use-package ---
-
+(package-install 'use-package)
 (require 'use-package)
+(setq use-package-always-ensure t)
 
-(use-package magit
-  :bind (("C-x g" . magit-status)
-         ("C-c m" . magit-status))
+(use-package calendar
+  :defer
   :config
-  (defadvice magit-status (around magit-fullscreen activate)
-    (window-configuration-to-register :magit-fullscreen)
-    ad-do-it
-    (delete-other-windows)))
+  ;; http://www.emacswiki.org/emacs/calendarweeknumbers
+  (copy-face font-lock-constant-face 'calendar-iso-week-face)
+  (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
+  (setq calendar-intermonth-text
+        '(propertize
+          (format "%2d"
+                  (car
+                   (calendar-iso-from-absolute
+                    (calendar-absolute-from-gregorian (list month day year)))))
+          'font-lock-face 'calendar-iso-week-face))
+  (setq calendar-week-start-day 1))
 
-(use-package multiple-cursors
-  :bind (("C-ø" . mc/mark-next-like-this)
-         ("C-Ø" . mc/mark-all-like-this)))
+(use-package cider)
+
+(use-package company
+  :diminish company-mode
+  :config
+  (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous)
+  (define-key company-active-map (kbd "<tab>") 'company-complete)
+
+  (global-company-mode t))
+
+(use-package dired
+  :ensure nil
+  :config
+  (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "å") 'dired-up-directory))))
+
+(use-package dired-details
+  :config
+
+  (if (executable-find "gls")
+      (progn
+        (setq dired-use-ls-dired t)
+        (setq insert-directory-program (executable-find "gls")))
+    (progn
+      (setq ls-lisp-use-insert-directory-program nil)
+      (require 'ls-lisp)))
+
+  (setq-default dired-details-hidden-string "--- ")
+  (dired-details-install))
+
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns))
+  :config
+  (exec-path-from-shell-initialize))
+
+(use-package expand-region
+  :bind ("C-æ" . er/expand-region))
+
+(use-package focus)
+
+(use-package git-gutter-fringe
+  :diminish git-gutter-mode
+  :if (window-system)
+  :preface
+  (global-git-gutter-mode 1)
+  (dolist (p '((git-gutter:added    . "#0c0")
+               (git-gutter:deleted  . "#c00")
+               (git-gutter:modified . "#c0c")))
+    (set-face-foreground (car p) (cdr p))
+    (set-face-background (car p) (cdr p))))
 
 (use-package helm
   :diminish helm-mode
@@ -133,55 +154,37 @@
 
   (helm-mode 1))
 
-(use-package expand-region
-  :bind ("C-æ" . er/expand-region))
-
-(use-package paren
-  :config
-  (setq show-paren-delay 0)
-  (show-paren-mode 1))
-
-(use-package paredit
-  :diminish "()"
-  :config
-  (add-hook 'cider-repl-mode-hook 'paredit-mode)
-  (add-hook 'clojure-mode-hook 'paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
-
-(use-package git-gutter-fringe
-  :diminish git-gutter-mode
-  :if (window-system)
-  :preface
-  (global-git-gutter-mode 1)
-  (dolist (p '((git-gutter:added    . "#0c0")
-               (git-gutter:deleted  . "#c00")
-               (git-gutter:modified . "#c0c")))
-    (set-face-foreground (car p) (cdr p))
-    (set-face-background (car p) (cdr p))))
-
-(use-package pdf-tools
-  :if (window-system)
-  :mode "\\.pdf\\'"
-  :config
-  (pdf-tools-install))
-
-(use-package company
-  :diminish company-mode
-  :config
-  (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous)
-  (define-key company-active-map (kbd "<tab>") 'company-complete)
-
-  (global-company-mode t))
+(use-package helm-swoop)
 
 (use-package ledger-mode
   :mode "\\.ledger\\'")
 
+(use-package macrostep
+  :bind ("C-c x" . macrostep-expand))
+
+(use-package magit
+  :bind (("C-x g" . magit-status)
+         ("C-c m" . magit-status))
+  :config
+  (defadvice magit-status (around magit-fullscreen activate)
+    (window-configuration-to-register :magit-fullscreen)
+    ad-do-it
+    (delete-other-windows)))
+
+(use-package markdown-mode)
+
 (use-package maude-mode
   :mode "\\.fm\\'")
 
+(use-package move-text)
+(use-package multi-term)
+
+(use-package multiple-cursors
+  :bind (("C-ø" . mc/mark-next-like-this)
+         ("C-Ø" . mc/mark-all-like-this)))
+
 (use-package org-mode
+  :ensure nil
   :init
   (setq org-agenda-default-appointment-duration 120
         org-agenda-skip-deadline-if-done nil
@@ -193,45 +196,37 @@
         org-habit-show-done-always-green t
         org-habit-show-habits-only-for-today t
         org-startup-indented t)
-
-  (use-package org-bullets
-    :config
-    (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
-
   :bind ("C-c c" . org-capture))
 
-(use-package uniquify
+(use-package org-bullets
   :config
-  (setq uniquify-buffer-name-style 'forward))
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-(use-package exec-path-from-shell
-  :defer 1
-  :if (memq window-system '(mac ns))
+(use-package paredit
+  :diminish "()"
   :config
-  (exec-path-from-shell-initialize))
+  (add-hook 'cider-repl-mode-hook 'paredit-mode)
+  (add-hook 'clojure-mode-hook 'paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
 
-(use-package undo-tree
-  :diminish undo-tree-mode
+(use-package paren
   :config
-  (global-undo-tree-mode))
+  (setq show-paren-delay 0)
+  (show-paren-mode 1))
 
-(use-package calendar
-  :defer
+(use-package pdf-tools
+  :if (window-system)
+  :mode "\\.pdf\\'"
   :config
-  ;; http://www.emacswiki.org/emacs/calendarweeknumbers
-  (copy-face font-lock-constant-face 'calendar-iso-week-face)
-  (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
-  (setq calendar-intermonth-text
-        '(propertize
-          (format "%2d"
-                  (car
-                   (calendar-iso-from-absolute
-                    (calendar-absolute-from-gregorian (list month day year)))))
-          'font-lock-face 'calendar-iso-week-face))
-  (setq calendar-week-start-day 1))
+  (pdf-tools-install))
 
-(use-package macrostep
-  :bind ("C-c x" . macrostep-expand))
+(use-package php-mode)
+
+(use-package server
+  :if window-system
+  :config
+  (unless (server-running-p)
+    (server-start)))
 
 (use-package shell
   :bind (("C-z" . toggle-shell)
@@ -280,37 +275,23 @@
         (shell)
         (set-process-query-on-exit-flag (get-process "shell") nil)))))
 
+(use-package try)
+
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :config
+  (global-undo-tree-mode))
+
+(use-package uniquify
+  :ensure nil
+  :config
+  (setq uniquify-buffer-name-style 'forward))
+
 (use-package web-mode
   :mode ("\\.php\\'"
          "\\.html\\'"
          "\\.js\\'"
          "\\.css\\'"))
-
-(use-package server
-  :defer
-  :if window-system
-  :config
-  (unless (server-running-p)
-    (server-start)))
-
-(use-package dired
-  :config
-  (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "å") 'dired-up-directory))))
-
-(use-package dired-details
-  :defer 1
-  :config
-
-  (if (executable-find "gls")
-      (progn
-        (setq dired-use-ls-dired t)
-        (setq insert-directory-program (executable-find "gls")))
-    (progn
-      (setq ls-lisp-use-insert-directory-program nil)
-      (require 'ls-lisp)))
-
-  (setq-default dired-details-hidden-string "--- ")
-  (dired-details-install))
 
 ;;; --- Various ---
 
@@ -417,6 +398,9 @@ argument is given, the duplicated region will be commented out."
 ;;; --- Apperance ---
 
 (when window-system
+  (use-package leuven-theme)
+  (use-package cyberpunk-theme)
+
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
   (defadvice load-theme
