@@ -18,8 +18,8 @@
   (if (fboundp mode) (funcall mode 1)))
 
 ;; Sane defaults
-(put 'inhibit-startup-echo-area-message 'saved-value
-     (setq inhibit-startup-echo-area-message (user-login-name)))
+(eval-after-load "startup" '(fset 'display-startup-echo-area-message 'ignore))
+
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq scroll-conservatively 1)
@@ -33,6 +33,8 @@
 (setq-default require-final-newline nil)
 
 (fset 'yes-or-no-p 'y-or-n-p)
+
+(setq initial-major-mode 'text-mode)
 
 ;; Enable disabled commands
 (put 'set-goal-column 'disabled nil)
