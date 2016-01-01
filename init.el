@@ -122,7 +122,7 @@
   (exec-path-from-shell-initialize))
 
 (use-package expand-region
-  :bind ("C-æ" . er/expand-region))
+  :bind ("M-æ" . er/expand-region))
 
 (use-package focus)
 
@@ -182,8 +182,8 @@
 (use-package multi-term)
 
 (use-package multiple-cursors
-  :bind (("C-ø" . mc/mark-next-like-this)
-         ("C-Ø" . mc/mark-all-like-this)))
+  :bind (("M-ø" . mc/mark-next-like-this)
+         ("M-Ø" . mc/mark-all-like-this)))
 
 (use-package org-mode
   :ensure nil
@@ -400,8 +400,8 @@ argument is given, the duplicated region will be commented out."
 ;;; --- Apperance ---
 
 (when window-system
-  (use-package leuven-theme)
-  (use-package cyberpunk-theme)
+  ;(use-package leuven-theme)
+  ;(use-package cyberpunk-theme)
 
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
@@ -423,13 +423,14 @@ argument is given, the duplicated region will be commented out."
                 (buffer-face-mode 1))))
 
   (defun setup-cyberpunk ()
-    (load-theme 'cyberpunk t))
+    (load-theme 'cyberpunk t)
+    (set-face-attribute 'fringe nil :background "grey10"))
 
-  (setup-leuven)
+  (setup-cyberpunk)
 
   (defun cycle-themes ()
     "Returns a function that lets you cycle your themes."
-    (lexical-let ((themes '#1=(leuven cyberpunk . #1#)))
+    (lexical-let ((themes '#1=(cyberpunk leuven . #1#)))
       (lambda ()
         (interactive)
         (let ((theme (car (setq themes (cdr themes)))))
