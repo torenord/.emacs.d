@@ -96,8 +96,6 @@
 
   (global-company-mode t))
 
-(use-package cyberpunk-theme)
-
 (use-package dired
   :ensure nil
   :config
@@ -403,8 +401,10 @@ argument is given, the duplicated region will be commented out."
 ;;; --- Apperance ---
 
 (when window-system
-  ;(use-package leuven-theme)
-  ;(use-package cyberpunk-theme)
+  (unless (package-installed-p 'leuven-theme)
+    (package-install 'leuven-theme))
+  (unless (package-installed-p 'cyberpunk-theme)
+    (package-install 'cyberpunk-theme))
 
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
