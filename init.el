@@ -71,7 +71,6 @@
 (setq use-package-always-ensure t)
 
 (use-package calendar
-  :defer
   :config
   ;; http://www.emacswiki.org/emacs/calendarweeknumbers
   (copy-face font-lock-constant-face 'calendar-iso-week-face)
@@ -96,6 +95,8 @@
   (define-key company-active-map (kbd "<tab>") 'company-complete)
 
   (global-company-mode t))
+
+(use-package cyberpunk-theme)
 
 (use-package dired
   :ensure nil
@@ -203,6 +204,8 @@
 (use-package org-bullets
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+(use-package org-pomodoro)
 
 (use-package paredit
   :diminish "()"
@@ -369,7 +372,7 @@ argument is given, the duplicated region will be commented out."
 ;; GNU/Linux
 (when (equal system-type 'gnu/linux)
   (set-face-attribute 'default nil
-                      :height 90
+                      :height 115
                       :family "Liberation Mono"))
 
 ;; Mac OS X
