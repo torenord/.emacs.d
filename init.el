@@ -20,21 +20,21 @@
 ;; Sane defaults
 (eval-after-load "startup" '(fset 'display-startup-echo-area-message 'ignore))
 
+(setq custom-file (make-temp-file ""))
 (setq inhibit-startup-screen t)
+(setq initial-major-mode 'text-mode)
 (setq initial-scratch-message nil)
-(setq scroll-conservatively 1)
+(setq load-prefer-newer t)
 (setq ring-bell-function 'ignore)
 (setq save-interprogram-paste-before-kill t)
+(setq scroll-conservatively 1)
 (setq truncate-partial-width-windows nil)
-(setq load-prefer-newer t)
 
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
 (setq-default require-final-newline nil)
 
 (fset 'yes-or-no-p 'y-or-n-p)
-
-(setq initial-major-mode 'text-mode)
 
 ;; Enable disabled commands
 (put 'set-goal-column 'disabled nil)
