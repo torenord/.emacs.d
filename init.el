@@ -139,7 +139,10 @@
 (use-package helm
   :diminish helm-mode
   :demand
-  :bind (("M-y" . helm-show-kill-ring)
+  :bind (("M-x" . helm-M-x)
+         ("C-x C-m" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("M-y" . helm-show-kill-ring)
          ("C-c h g" . helm-google-suggest)
          ("C-c h o" . helm-occur)
          ("C-c h" . helm-command-prefix)
@@ -153,7 +156,9 @@
   (setq helm-ff-skip-boring-files t)
   (setq helm-mode-fuzzy-match t)
 
-  (helm-mode 1))
+  (helm-mode 1)
+  (helm-adaptive-mode 1)
+  (helm-push-mark-mode 1))
 
 (use-package helm-swoop)
 
