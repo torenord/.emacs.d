@@ -1,7 +1,5 @@
 ;;; --- Setup ---
 
-(require 'cl)
-
 ;; Disable modes
 (dolist (mode
          '(menu-bar-mode
@@ -462,15 +460,8 @@ argument is given, the duplicated region will be commented out."
 ;; Go fullscreen
 (define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
 
-;; Adjust text-scale
-(define-key custom-bindings-map (kbd "M-+") 'text-scale-increase)
-(define-key custom-bindings-map (kbd "M--") 'text-scale-decrease)
-(define-key custom-bindings-map (kbd "M-0") 'text-scale-adjust)
-
 (define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
 (define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
-
-(global-set-key (kbd "C-x C-m") 'execute-extended-command)
 
 (define-key custom-bindings-map (kbd "<M-S-up>") 'move-text-up)
 (define-key custom-bindings-map (kbd "<M-S-down>") 'move-text-down)
