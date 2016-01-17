@@ -64,7 +64,8 @@
 (when (not package-archive-contents)
   (package-refresh-contents))
 
-(package-install 'use-package)
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -115,8 +116,7 @@
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
-  :config
-  (exec-path-from-shell-initialize))
+  :config (exec-path-from-shell-initialize))
 
 (use-package expand-region
   :bind ("M-æ" . er/expand-region))
@@ -285,8 +285,7 @@
 
 (use-package undo-tree
   :diminish undo-tree-mode
-  :config
-  (global-undo-tree-mode))
+  :config (global-undo-tree-mode))
 
 (use-package uniquify
   :ensure nil
@@ -460,6 +459,8 @@ argument is given, the duplicated region will be commented out."
 ;; Go fullscreen
 (define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
 
+(define-key custom-bindings-map (kbd "C-c e") 'mc/edit-lines)
+
 (define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
 (define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
 
@@ -486,8 +487,3 @@ argument is given, the duplicated region will be commented out."
    (let ((private-file (concat user-emacs-directory "private.el")))
      (when (file-exists-p private-file)
        (load-file private-file)))))
-
-;;; --- Etc ---
-
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
-(setq exec-path (append exec-path '("/usr/local/bin")))
