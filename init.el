@@ -12,7 +12,8 @@
 ;; Enable modes
 (dolist (mode
          '(delete-selection-mode
-           column-number-mode))
+           column-number-mode
+           winner-mode))
   (if (fboundp mode) (funcall mode 1)))
 
 ;; Sane defaults
@@ -224,6 +225,7 @@
   :if (window-system)
   :mode "\\.pdf\\'"
   :config
+  (add-hook 'pdf-tools-enabled-hook 'auto-revert-mode)
   (pdf-tools-install))
 
 (use-package php-mode)
@@ -367,7 +369,14 @@ argument is given, the duplicated region will be commented out."
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
 
-;;; --- OS secifics ---
+(defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
+  "Kill up to the ARG'th occurence of CHAR, and leave CHAR. If
+  you are deleting forward, the CHAR is replaced and the point is
+  put before CHAR"
+  (insert char)
+  (if (< 0 arg) (forward-char -1)))
+
+;;; --- OS specifics ---
 
 ;; GNU/Linux
 (when (equal system-type 'gnu/linux)
@@ -457,7 +466,7 @@ argument is given, the duplicated region will be commented out."
 (define-key custom-bindings-map (kbd "M-,") 'goto-init-el)
 
 ;; Go fullscreen
-(define-key custom-bindings-map (kbd "M-<RET>") 'toggle-frame-fullscreen)
+(define-key custom-bindings-map (kbd "M-<f11>") 'toggle-frame-fullscreen)
 
 (define-key custom-bindings-map (kbd "C-c e") 'mc/edit-lines)
 
