@@ -451,7 +451,7 @@ argument is given, the duplicated region will be commented out."
           (cond ((eq theme 'leuven) (setup-leuven))
                 ((eq theme 'cyberpunk) (setup-cyberpunk)))))))
 
-  (global-set-key (kbd "<f12>") (cycle-themes)))
+  (global-set-key (kbd "M-<f12>") (cycle-themes)))
 
 ;;; --- Keybindings ---
 
