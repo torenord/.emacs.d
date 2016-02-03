@@ -115,6 +115,9 @@
   (setq-default dired-details-hidden-string "--- ")
   (dired-details-install))
 
+(use-package dired-narrow
+  :bind ("C-c f" . dired-narrow))
+
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
@@ -134,6 +137,8 @@
                (git-gutter:modified . "#c0c")))
     (set-face-foreground (car p) (cdr p))
     (set-face-background (car p) (cdr p))))
+
+(use-package haskell-mode)
 
 (use-package helm
   :diminish helm-mode
@@ -376,6 +381,16 @@ argument is given, the duplicated region will be commented out."
   (insert char)
   (if (< 0 arg) (forward-char -1)))
 
+(defadvice eval-last-sexp (around replace-sexp (arg) activate)
+  "Replace sexp when called with a prefix argument."
+  (if arg
+      (let ((pos (point)))
+        ad-do-it
+        (goto-char pos)
+        (backward-kill-sexp)
+        (forward-sexp))
+    ad-do-it))
+
 ;;; --- OS specifics ---
 
 ;; GNU/Linux
@@ -406,7 +421,7 @@ argument is given, the duplicated region will be commented out."
 
 ;; Windows
 (when (equal system-type 'windows-nt)
-  (set-face-attribute 'default nil :height 185)
+  (set-face-attribute 'default nil :height 115)
   (set-face-attribute 'default nil :family "Lucida Console"))
 
 ;;; --- Apperance ---
@@ -422,6 +437,11 @@ argument is given, the duplicated region will be commented out."
   (defadvice load-theme
       (before disable-before-load (theme &optional no-confirm no-enable) activate)
     (mapc 'disable-theme custom-enabled-themes))
+
+  (defun setup-adwaita ()
+    (load-theme 'adwaita t)
+    (set-cursor-color "black")
+    (set-face-attribute 'mode-line nil :box nil))
 
   (defun setup-leuven ()
     (load-theme 'leuven t)
@@ -440,15 +460,16 @@ argument is given, the duplicated region will be commented out."
     (load-theme 'cyberpunk t)
     (set-face-attribute 'fringe nil :background "grey10"))
 
-  (setup-cyberpunk)
+  (setup-adwaita)
 
   (defun cycle-themes ()
     "Returns a function that lets you cycle your themes."
-    (lexical-let ((themes '#1=(cyberpunk leuven . #1#)))
+    (lexical-let ((themes '#1=(adwaita cyberpunk leuven . #1#)))
       (lambda ()
         (interactive)
         (let ((theme (car (setq themes (cdr themes)))))
-          (cond ((eq theme 'leuven) (setup-leuven))
+          (cond ((eq theme 'adwaita) (setup-adwaita))
+                ((eq theme 'leuven) (setup-leuven))
                 ((eq theme 'cyberpunk) (setup-cyberpunk)))))))
 
   (global-set-key (kbd "M-<f12>") (cycle-themes)))
