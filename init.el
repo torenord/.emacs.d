@@ -21,7 +21,6 @@
 
 (setq custom-file (make-temp-file ""))
 (setq inhibit-startup-screen t)
-(setq initial-major-mode 'text-mode)
 (setq initial-scratch-message nil)
 (setq load-prefer-newer t)
 (setq ring-bell-function 'ignore)
@@ -159,6 +158,7 @@
 
   (setq helm-ff-skip-boring-files t)
   (setq helm-mode-fuzzy-match t)
+  (setq helm-move-to-line-cycle-in-source t)
 
   (helm-mode 1)
   (helm-adaptive-mode 1)
@@ -441,6 +441,8 @@ argument is given, the duplicated region will be commented out."
   (defun setup-adwaita ()
     (load-theme 'adwaita t)
     (set-cursor-color "black")
+    (set-background-color "#f3e7da")
+    (set-face-attribute 'show-paren-match nil :background "#b3d283")
     (set-face-attribute 'mode-line nil :box nil))
 
   (defun setup-leuven ()
