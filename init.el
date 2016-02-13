@@ -139,32 +139,12 @@
 
 (use-package haskell-mode)
 
-(use-package helm
-  :diminish helm-mode
-  :demand
-  :bind (("M-x" . helm-M-x)
-         ("C-x C-m" . helm-M-x)
-         ("C-x C-f" . helm-find-files)
-         ("M-y" . helm-show-kill-ring)
-         ("C-c h g" . helm-google-suggest)
-         ("C-c h o" . helm-occur)
-         ("C-c h" . helm-command-prefix)
-         ("M-i" . helm-swoop))
+(use-package swiper
   :config
-  (require 'helm-config)
-
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
-
-  (setq helm-ff-skip-boring-files t)
-  (setq helm-mode-fuzzy-match t)
-  (setq helm-move-to-line-cycle-in-source t)
-
-  (helm-mode 1)
-  (helm-adaptive-mode 1)
-  (helm-push-mark-mode 1))
-
-(use-package helm-swoop)
+  (ivy-mode)
+  (setq ivy-wrap t)
+  (setq ivy-height 20)
+  (global-set-key (kbd "C-x C-m") 'execute-extended-command))
 
 (use-package ledger-mode
   :mode "\\.ledger\\'")
@@ -427,11 +407,6 @@ argument is given, the duplicated region will be commented out."
 ;;; --- Apperance ---
 
 (when window-system
-  (unless (package-installed-p 'leuven-theme)
-    (package-install 'leuven-theme))
-  (unless (package-installed-p 'cyberpunk-theme)
-    (package-install 'cyberpunk-theme))
-
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
   (defadvice load-theme
@@ -445,36 +420,7 @@ argument is given, the duplicated region will be commented out."
     (set-face-attribute 'show-paren-match nil :background "#b3d283")
     (set-face-attribute 'mode-line nil :box nil))
 
-  (defun setup-leuven ()
-    (load-theme 'leuven t)
-
-    (set-face-attribute 'region nil :background "#b3d2f3")
-    (set-face-attribute 'show-paren-match nil :background "#b3d2f3")
-    (set-face-attribute 'fringe nil :background "grey95")
-    (set-cursor-color "black")
-
-    (add-hook 'pdf-tools-enabled-hook
-              (lambda ()
-                (setq buffer-face-mode-face `(:background "#ccc"))
-                (buffer-face-mode 1))))
-
-  (defun setup-cyberpunk ()
-    (load-theme 'cyberpunk t)
-    (set-face-attribute 'fringe nil :background "grey10"))
-
-  (setup-adwaita)
-
-  (defun cycle-themes ()
-    "Returns a function that lets you cycle your themes."
-    (lexical-let ((themes '#1=(adwaita cyberpunk leuven . #1#)))
-      (lambda ()
-        (interactive)
-        (let ((theme (car (setq themes (cdr themes)))))
-          (cond ((eq theme 'adwaita) (setup-adwaita))
-                ((eq theme 'leuven) (setup-leuven))
-                ((eq theme 'cyberpunk) (setup-cyberpunk)))))))
-
-  (global-set-key (kbd "M-<f12>") (cycle-themes)))
+  (setup-adwaita))
 
 ;;; --- Keybindings ---
 
