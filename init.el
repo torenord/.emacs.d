@@ -243,6 +243,11 @@
 
 (use-package php-mode)
 
+(use-package jedi
+  :config
+  (add-hook 'python-mode-hook 'jedi:setup)
+  (setq jedi:complete-on-dot t))
+
 (use-package server
   :if window-system
   :config
