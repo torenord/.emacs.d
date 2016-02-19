@@ -140,11 +140,39 @@
 (use-package haskell-mode)
 
 (use-package swiper
+  :disabled
   :config
   (ivy-mode)
   (setq ivy-wrap t)
   (setq ivy-height 20)
   (global-set-key (kbd "C-x C-m") 'execute-extended-command))
+
+(use-package helm
+  :diminish helm-mode
+  :demand
+  :bind (("M-x" . helm-M-x)
+         ("C-x C-m" . helm-M-x)
+         ("C-x C-f" . helm-find-files)
+         ("M-y" . helm-show-kill-ring)
+         ("C-c h g" . helm-google-suggest)
+         ("C-c h o" . helm-occur)
+         ("C-c h" . helm-command-prefix)
+         ("M-i" . helm-swoop))
+  :config
+  (require 'helm-config)
+
+  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
+  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+
+  (setq helm-ff-skip-boring-files t)
+  (setq helm-mode-fuzzy-match t)
+  (setq helm-move-to-line-cycle-in-source t)
+
+  (helm-mode 1)
+  (helm-adaptive-mode 1)
+  (helm-push-mark-mode 1))
+
+(use-package helm-swoop)
 
 (use-package ledger-mode
   :mode "\\.ledger\\'")
