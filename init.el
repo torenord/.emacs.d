@@ -83,8 +83,6 @@
           'font-lock-face 'calendar-iso-week-face))
   (setq calendar-week-start-day 1))
 
-(use-package cider)
-
 (use-package company
   :diminish company-mode
   :config
@@ -94,6 +92,12 @@
   (define-key company-active-map (kbd "<tab>") 'company-complete)
 
   (global-company-mode t))
+
+(use-package company-jedi
+  :config
+  (defun my/python-mode-hook ()
+    (add-to-list 'company-backends 'company-jedi))
+  (add-hook 'python-mode-hook 'my/python-mode-hook))
 
 (use-package dired
   :ensure nil
@@ -243,11 +247,6 @@
 
 (use-package php-mode)
 
-(use-package jedi
-  :config
-  (add-hook 'python-mode-hook 'jedi:setup)
-  (setq jedi:complete-on-dot t))
-
 (use-package server
   :if window-system
   :config
@@ -317,6 +316,10 @@
          "\\.html\\'"
          "\\.js\\'"
          "\\.css\\'"))
+
+(use-package yasnippet
+  :config
+  (yas-global-mode))
 
 ;;; --- Various ---
 
