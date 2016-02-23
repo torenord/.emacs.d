@@ -25,7 +25,7 @@
 (setq load-prefer-newer t)
 (setq ring-bell-function 'ignore)
 (setq save-interprogram-paste-before-kill t)
-(setq scroll-conservatively 1)
+(setq scroll-conservatively 1000)
 (setq truncate-partial-width-windows nil)
 
 (setq-default indent-tabs-mode nil)
@@ -106,7 +106,6 @@
 
 (use-package dired-details
   :config
-
   (if (executable-find "gls")
       (progn
         (setq dired-use-ls-dired t)
@@ -180,6 +179,8 @@
 
 (use-package ledger-mode
   :mode "\\.ledger\\'")
+
+(use-package lua-mode)
 
 (use-package macrostep
   :bind ("C-c x" . macrostep-expand))
