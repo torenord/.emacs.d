@@ -11,8 +11,9 @@
 
 ;; Enable modes
 (dolist (mode
-         '(delete-selection-mode
-           column-number-mode
+         '(column-number-mode
+           delete-selection-mode
+           global-prettify-symbols-mode
            winner-mode))
   (if (fboundp mode) (funcall mode 1)))
 
@@ -248,6 +249,8 @@
 
 (use-package php-mode)
 
+(use-package rainbow-mode)
+
 (use-package server
   :if window-system
   :config
@@ -450,14 +453,20 @@ argument is given, the duplicated region will be commented out."
       (before disable-before-load (theme &optional no-confirm no-enable) activate)
     (mapc 'disable-theme custom-enabled-themes))
 
-  (defun setup-adwaita ()
-    (load-theme 'adwaita t)
+  (defun do-adwaita-customizations ()
     (set-cursor-color "black")
     (set-background-color "#f3e7da")
     (set-face-attribute 'show-paren-match nil :background "#b3d283")
     (set-face-attribute 'mode-line nil :box nil))
 
-  (setup-adwaita))
+  (add-hook 'after-make-frame-functions
+            (lambda (frame)
+              (set-variable 'color-theme-is-global nil)
+              (select-frame frame)
+              (do-adwaita-customizations)))
+
+  (load-theme 'adwaita t)
+  (do-adwaita-customizations))
 
 ;;; --- Keybindings ---
 
