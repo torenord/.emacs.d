@@ -461,7 +461,6 @@ argument is given, the duplicated region will be commented out."
 
   (add-hook 'after-make-frame-functions
             (lambda (frame)
-              (set-variable 'color-theme-is-global nil)
               (select-frame frame)
               (do-adwaita-customizations)))
 
