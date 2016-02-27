@@ -454,15 +454,10 @@ argument is given, the duplicated region will be commented out."
     (mapc 'disable-theme custom-enabled-themes))
 
   (defun do-adwaita-customizations ()
-    (set-cursor-color "black")
-    (set-background-color "#f3e7da")
+    (set-face-attribute 'cursor nil :background "black")
+    (set-face-attribute 'default nil :background "#f3e7da")
     (set-face-attribute 'show-paren-match nil :background "#b3d283")
     (set-face-attribute 'mode-line nil :box nil))
-
-  (add-hook 'after-make-frame-functions
-            (lambda (frame)
-              (select-frame frame)
-              (do-adwaita-customizations)))
 
   (load-theme 'adwaita t)
   (do-adwaita-customizations))
