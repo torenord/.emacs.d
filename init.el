@@ -434,10 +434,7 @@ argument is given, the duplicated region will be commented out."
   (when window-system
     (menu-bar-mode 1)
 
-    (when (fboundp 'font-family-list)
-      (set-face-attribute 'default nil :height 150)
-      (when (member "Source Code Pro" (font-family-list))
-        (set-face-attribute 'default nil :family "Source Code Pro")))))
+    (set-face-attribute 'default nil :height 150)))
 
 ;; Windows
 (when (equal system-type 'windows-nt)
