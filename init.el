@@ -100,11 +100,6 @@
     (add-to-list 'company-backends 'company-jedi))
   (add-hook 'python-mode-hook 'my/python-mode-hook))
 
-(use-package dired
-  :ensure nil
-  :config
-  (add-hook 'dired-mode-hook (lambda () (local-set-key (kbd "å") 'dired-up-directory))))
-
 (use-package dired-details
   :config
   (if (executable-find "gls")
@@ -120,6 +115,11 @@
 
 (use-package dired-narrow
   :bind ("C-c f" . dired-narrow))
+
+(use-package drag-stuff
+  :config
+  (setq drag-stuff-modifier '(meta shift))
+  (drag-stuff-global-mode 1))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -142,14 +142,6 @@
     (set-face-background (car p) (cdr p))))
 
 (use-package haskell-mode)
-
-(use-package swiper
-  :disabled
-  :config
-  (ivy-mode)
-  (setq ivy-wrap t)
-  (setq ivy-height 20)
-  (global-set-key (kbd "C-x C-m") 'execute-extended-command))
 
 (use-package helm
   :diminish helm-mode
@@ -321,6 +313,10 @@
          "\\.js\\'"
          "\\.css\\'"))
 
+(use-package which-key
+  :config
+  (which-key-mode 1))
+
 (use-package yasnippet
   :config
   (yas-global-mode))
@@ -457,6 +453,9 @@ argument is given, the duplicated region will be commented out."
 (defvar custom-bindings-map (make-keymap)
   "A keymap for custom bindings.")
 
+;; Jump to next window
+(global-set-key (kbd "M-'") 'next-multiframe-window)
+
 ;; Jump by paragraph
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
@@ -472,14 +471,11 @@ argument is given, the duplicated region will be commented out."
 (define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
 (define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
 
-(define-key custom-bindings-map (kbd "<M-S-up>") 'move-text-up)
-(define-key custom-bindings-map (kbd "<M-S-down>") 'move-text-down)
-
 (define-key custom-bindings-map (kbd "C-,") 'jump-to-previous-like-this)
 (define-key custom-bindings-map (kbd "C-.") 'jump-to-next-like-this)
 
 (define-key custom-bindings-map (kbd "<C-tab>") 'tidy)
-(define-key custom-bindings-map (kbd "C-x C-j") 'desktop-clear)
+(define-key custom-bindings-map (kbd "<f12>") 'desktop-clear)
 (define-key custom-bindings-map (kbd "C-x k") 'kill-this-buffer)
 
 (define-minor-mode custom-bindings-mode
