@@ -128,18 +128,29 @@
 (use-package expand-region
   :bind ("M-æ" . er/expand-region))
 
-(use-package focus)
+(use-package flycheck
+  :config
+  (global-flycheck-mode))
+
+(use-package flyspell
+  :config
+  (setq ispell-program-name "hunspell")
+  (ispell-change-dictionary "en_US")
+
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'text-mode-hook 'flyspell-mode)
+
+  (use-package flyspell-popup
+    :config
+    (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
+
+(use-package git-commit)
 
 (use-package git-gutter-fringe
   :diminish git-gutter-mode
   :if (window-system)
   :preface
-  (global-git-gutter-mode 1)
-  (dolist (p '((git-gutter:added    . "#0c0")
-               (git-gutter:deleted  . "#c00")
-               (git-gutter:modified . "#c0c")))
-    (set-face-foreground (car p) (cdr p))
-    (set-face-background (car p) (cdr p))))
+  (global-git-gutter-mode 1))
 
 (use-package haskell-mode)
 
