@@ -2,8 +2,8 @@
 
 ;; Disable modes
 (dolist (mode
-         '(menu-bar-mode
-           blink-cursor-mode
+         '(blink-cursor-mode
+           menu-bar-mode
            scroll-bar-mode
            tool-bar-mode
            tooltip-mode))
@@ -13,12 +13,12 @@
 (dolist (mode
          '(column-number-mode
            delete-selection-mode
-           global-prettify-symbols-mode
            winner-mode))
   (if (fboundp mode) (funcall mode 1)))
 
 ;; Sane defaults
-(eval-after-load "startup" '(fset 'display-startup-echo-area-message 'ignore))
+(fset 'display-startup-echo-area-message 'ignore)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (setq custom-file (make-temp-file ""))
 (setq inhibit-startup-screen t)
@@ -32,8 +32,6 @@
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
 (setq-default require-final-newline nil)
-
-(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Enable disabled commands
 (put 'set-goal-column 'disabled nil)
@@ -58,7 +56,6 @@
 (require 'package)
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/"))
 
 (package-initialize)
 
@@ -68,11 +65,12 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
+
 (setq use-package-always-ensure t)
 
 (use-package calendar
   :config
-  ;; http://www.emacswiki.org/emacs/calendarweeknumbers
+  ;; https://www.emacswiki.org/emacs/CalendarWeekNumbers
   (copy-face font-lock-constant-face 'calendar-iso-week-face)
   (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
   (setq calendar-intermonth-text
@@ -119,7 +117,8 @@
 (use-package drag-stuff
   :config
   (setq drag-stuff-modifier '(meta shift))
-  (drag-stuff-global-mode 1))
+  (drag-stuff-global-mode 1)
+  (drag-stuff-define-keys))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -152,8 +151,6 @@
   :preface
   (global-git-gutter-mode 1))
 
-(use-package haskell-mode)
-
 (use-package helm
   :diminish helm-mode
   :demand
@@ -184,8 +181,6 @@
 (use-package ledger-mode
   :mode "\\.ledger\\'")
 
-(use-package lua-mode)
-
 (use-package macrostep
   :bind ("C-c x" . macrostep-expand))
 
@@ -203,7 +198,6 @@
 (use-package maude-mode
   :mode "\\.fm\\'")
 
-(use-package move-text)
 (use-package multi-term)
 
 (use-package multiple-cursors
@@ -229,8 +223,6 @@
   :config
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-(use-package org-pomodoro)
-
 (use-package paredit
   :diminish "()"
   :config
@@ -249,10 +241,6 @@
   :config
   (add-hook 'pdf-tools-enabled-hook 'auto-revert-mode)
   (pdf-tools-install))
-
-(use-package php-mode)
-
-(use-package rainbow-mode)
 
 (use-package server
   :if window-system
@@ -347,19 +335,7 @@
   (interactive)
   (find-file (expand-file-name "init.el" user-emacs-directory)))
 
-;; From org-trim in org.el.
-(defun torenord/trim (s)
-  "Remove whitespace at beginning and end of string."
-  (if (string-match "\\`[ \t\n\r]+" s) (setq s (replace-match "" t t s)))
-  (if (string-match "[ \t\n\r]+\\'" s) (setq s (replace-match "" t t s)))
-  s)
-
-(defun torenord/insert-date ()
-  "Insert current date at point."
-  (interactive)
-  (insert (torenord/trim (format-time-string "%e. %B %Y"))))
-
-;; from https://github.com/larstvei/dot-emacs
+;; From https://github.com/larstvei/dot-emacs
 (defun jump-to-symbol-internal (&optional backwardp)
   "Jumps to the next symbol near the point if such a symbol
 exists. If BACKWARDP is non-nil it jumps backward."
@@ -375,7 +351,7 @@ exists. If BACKWARDP is non-nil it jumps backward."
           (backwardp (forward-char (- point beg)))
           (t  (backward-char (- end point))))))
 
-;; from https://github.com/larstvei/dot-emacs
+;; From https://github.com/larstvei/dot-emacs
 (defun jump-to-previous-like-this ()
   "Jumps to the previous occurrence of the symbol at point."
   (interactive)
@@ -387,7 +363,7 @@ exists. If BACKWARDP is non-nil it jumps backward."
   (interactive)
   (jump-to-symbol-internal))
 
-;; from https://github.com/larstvei/dot-emacs
+;; From https://github.com/larstvei/dot-emacs
 (defun duplicate-thing (comment)
   "Duplicates the current line, or the region if active. If an
 argument is given, the duplicated region will be commented out."
@@ -435,13 +411,13 @@ argument is given, the duplicated region will be commented out."
   ;; Fix comma on Apple USB Keyboard
   (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
 
-  (setq delete-by-moving-to-trash t
-        trash-directory "~/.Trash/emacs")
+  (setq delete-by-moving-to-trash t)
+  (setq trash-directory "~/.Trash/emacs")
 
   (when window-system
     (menu-bar-mode 1)
 
-    (set-face-attribute 'default nil :height 150)))
+    (set-face-attribute 'default nil :height 185)))
 
 ;; Windows
 (when (equal system-type 'windows-nt)
@@ -461,9 +437,6 @@ argument is given, the duplicated region will be commented out."
 
 ;;; --- Keybindings ---
 
-(defvar custom-bindings-map (make-keymap)
-  "A keymap for custom bindings.")
-
 ;; Jump to next window
 (global-set-key (kbd "M-'") 'next-multiframe-window)
 
@@ -472,30 +445,23 @@ argument is given, the duplicated region will be commented out."
 (global-set-key (kbd "M-p") 'backward-paragraph)
 
 ;; Goto init.el
-(define-key custom-bindings-map (kbd "M-,") 'goto-init-el)
+(global-set-key (kbd "M-,") 'goto-init-el)
 
 ;; Go fullscreen
-(define-key custom-bindings-map (kbd "M-<f11>") 'toggle-frame-fullscreen)
+(global-set-key (kbd "M-<f11>") 'toggle-frame-fullscreen)
 
-(define-key custom-bindings-map (kbd "C-c e") 'mc/edit-lines)
+(global-set-key (kbd "C-c d") 'duplicate-thing)
 
-(define-key custom-bindings-map (kbd "C-c d") 'duplicate-thing)
-(define-key custom-bindings-map (kbd "C-c q") 'torenord/insert-date)
+(global-set-key (kbd "C-,") 'jump-to-previous-like-this)
+(global-set-key (kbd "C-.") 'jump-to-next-like-this)
 
-(define-key custom-bindings-map (kbd "C-,") 'jump-to-previous-like-this)
-(define-key custom-bindings-map (kbd "C-.") 'jump-to-next-like-this)
-
-(define-key custom-bindings-map (kbd "<C-tab>") 'tidy)
-(define-key custom-bindings-map (kbd "<f12>") 'desktop-clear)
-(define-key custom-bindings-map (kbd "C-x k") 'kill-this-buffer)
-
-(define-minor-mode custom-bindings-mode
-  "A mode that activates custom-bindings."
-  t nil custom-bindings-map)
+(global-set-key (kbd "<C-tab>") 'tidy)
+(global-set-key (kbd "<f12>") 'desktop-clear)
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;;; --- Private ---
 
-;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
+;; Load private.el if it exists (From https://github.com/larstvei/dot-emacs)
 (add-hook
  'after-init-hook
  (lambda ()
