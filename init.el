@@ -151,32 +151,29 @@
   :preface
   (global-git-gutter-mode 1))
 
-(use-package helm
-  :diminish helm-mode
-  :demand
-  :bind (("M-x" . helm-M-x)
-         ("C-x C-m" . helm-M-x)
-         ("C-x C-f" . helm-find-files)
-         ("M-y" . helm-show-kill-ring)
-         ("C-c h g" . helm-google-suggest)
-         ("C-c h o" . helm-occur)
-         ("C-c h" . helm-command-prefix)
-         ("M-i" . helm-swoop))
+(use-package ivy
   :config
-  (require 'helm-config)
+  (ivy-mode 1)
 
-  (define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action)
-  (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action)
+  (use-package counsel
+    :config
 
-  (setq helm-ff-skip-boring-files t)
-  (setq helm-mode-fuzzy-match t)
-  (setq helm-move-to-line-cycle-in-source t)
+    (global-set-key (kbd "M-x") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-m") 'counsel-M-x)
+    (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+    (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+    (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+    (global-set-key (kbd "<f1> l") 'counsel-find-library)
+    (global-set-key (kbd "<f2> i") 'counsel-info-lookup-symbol)
+    (global-set-key (kbd "<f2> u") 'counsel-unicode-char)
+    (global-set-key (kbd "C-c g") 'counsel-git)
+    (global-set-key (kbd "C-c j") 'counsel-git-grep)
+    (global-set-key (kbd "C-c k") 'counsel-ag)
+    (global-set-key (kbd "C-x l") 'counsel-locate))
 
-  (helm-mode 1)
-  (helm-adaptive-mode 1)
-  (helm-push-mark-mode 1))
-
-(use-package helm-swoop)
+  (use-package swiper
+    :config
+    (global-set-key (kbd "C-c s") 'swiper)))
 
 (use-package ledger-mode
   :mode "\\.ledger\\'")
@@ -202,26 +199,8 @@
 
 (use-package multiple-cursors
   :bind (("M-ø" . mc/mark-next-like-this)
-         ("M-Ø" . mc/mark-all-like-this)))
-
-(use-package org-mode
-  :ensure nil
-  :init
-  (setq org-agenda-default-appointment-duration 120
-        org-agenda-skip-deadline-if-done nil
-        org-agenda-skip-scheduled-if-done nil
-        org-agenda-start-on-weekday nil
-        org-deadline-warning-days 10
-        org-default-notes-file "~/org/notes.org"
-        org-habit-show-all-today nil
-        org-habit-show-done-always-green t
-        org-habit-show-habits-only-for-today t
-        org-startup-indented t)
-  :bind ("C-c c" . org-capture))
-
-(use-package org-bullets
-  :config
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+         ("M-Ø" . mc/mark-all-like-this)
+         ("C-c e" . mc/edit-lines)))
 
 (use-package paredit
   :diminish "()"
@@ -239,7 +218,6 @@
   :if (window-system)
   :mode "\\.pdf\\'"
   :config
-  (add-hook 'pdf-tools-enabled-hook 'auto-revert-mode)
   (pdf-tools-install))
 
 (use-package server
@@ -435,7 +413,7 @@ argument is given, the duplicated region will be commented out."
 
   (load-theme 'adwaita t))
 
-;;; --- Keybindings ---
+;;; --- Key-bindings ---
 
 ;; Jump to next window
 (global-set-key (kbd "M-'") 'next-multiframe-window)
