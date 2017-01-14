@@ -115,8 +115,8 @@
   :bind ("C-c f" . dired-narrow))
 
 (use-package drag-stuff
+  :diminish drag-stuff-mode
   :config
-  (setq drag-stuff-modifier '(meta shift))
   (drag-stuff-global-mode 1)
   (drag-stuff-define-keys))
 
@@ -142,14 +142,6 @@
   (use-package flyspell-popup
     :config
     (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
-
-(use-package git-commit)
-
-(use-package git-gutter-fringe
-  :diminish git-gutter-mode
-  :if (window-system)
-  :preface
-  (global-git-gutter-mode 1))
 
 (use-package ivy
   :config
@@ -179,12 +171,22 @@
   :mode "\\.ledger\\'")
 
 (use-package macrostep
-  :bind ("C-c x" . macrostep-expand))
+  :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
          ("C-c m" . magit-status))
-  :config
+  :init
+
+  (use-package with-editor)
+  (use-package git-commit)
+
+  (use-package git-gutter-fringe
+    :if (window-system)
+    :diminish git-gutter-mode
+    :config
+    (global-git-gutter-mode 1))
+
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
     ad-do-it
@@ -279,11 +281,6 @@
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
-(use-package uniquify
-  :ensure nil
-  :config
-  (setq uniquify-buffer-name-style 'forward))
-
 (use-package web-mode
   :mode ("\\.php\\'"
          "\\.html\\'"
@@ -291,6 +288,7 @@
          "\\.css\\'"))
 
 (use-package which-key
+  :diminish which-key-mode
   :config
   (which-key-mode 1))
 
@@ -308,10 +306,6 @@
     (indent-region beg end)
     (whitespace-cleanup)
     (untabify beg (if (< end (point-max)) end (point-max)))))
-
-(defun goto-init-el ()
-  (interactive)
-  (find-file (expand-file-name "init.el" user-emacs-directory)))
 
 ;; From https://github.com/larstvei/dot-emacs
 (defun jump-to-symbol-internal (&optional backwardp)
@@ -376,9 +370,10 @@ argument is given, the duplicated region will be commented out."
 
 ;; GNU/Linux
 (when (equal system-type 'gnu/linux)
-  (set-face-attribute 'default nil
-                      :height 115
-                      :family "Liberation Mono"))
+  (when window-system
+    (set-face-attribute 'default nil
+                        :height 115
+                        :family "Liberation Mono")))
 
 ;; Mac OS X
 (when (equal system-type 'darwin)
@@ -394,13 +389,13 @@ argument is given, the duplicated region will be commented out."
 
   (when window-system
     (menu-bar-mode 1)
-
-    (set-face-attribute 'default nil :height 185)))
+    (set-face-attribute 'default nil :height 150)))
 
 ;; Windows
 (when (equal system-type 'windows-nt)
-  (set-face-attribute 'default nil :height 115)
-  (set-face-attribute 'default nil :family "Lucida Console"))
+  (when window-system
+    (set-face-attribute 'default nil :height 115)
+    (set-face-attribute 'default nil :family "Lucida Console")))
 
 ;;; --- Apperance ---
 
@@ -423,7 +418,11 @@ argument is given, the duplicated region will be commented out."
 (global-set-key (kbd "M-p") 'backward-paragraph)
 
 ;; Goto init.el
-(global-set-key (kbd "M-,") 'goto-init-el)
+(global-set-key
+ (kbd "M-,")
+ (lambda ()
+   (interactive)
+   (find-file (expand-file-name "init.el" user-emacs-directory))))
 
 ;; Go fullscreen
 (global-set-key (kbd "M-<f11>") 'toggle-frame-fullscreen)
@@ -434,7 +433,11 @@ argument is given, the duplicated region will be commented out."
 (global-set-key (kbd "C-.") 'jump-to-next-like-this)
 
 (global-set-key (kbd "<C-tab>") 'tidy)
+
+;; Kill all buffers except for internal ones
 (global-set-key (kbd "<f12>") 'desktop-clear)
+
+;; Kill the current buffer
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;;; --- Private ---
