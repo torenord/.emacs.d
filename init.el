@@ -366,6 +366,9 @@ argument is given, the duplicated region will be commented out."
         (forward-sexp))
     ad-do-it))
 
+(load-file "~/.emacs.d/plain-org-wiki.el")
+(global-set-key (kbd "C-c w") 'plain-org-wiki)
+
 ;;; --- OS specifics ---
 
 ;; GNU/Linux
