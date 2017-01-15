@@ -17,6 +17,7 @@
   (if (fboundp mode) (funcall mode 1)))
 
 ;; Sane defaults
+
 (fset 'display-startup-echo-area-message 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -24,11 +25,13 @@
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq load-prefer-newer t)
+(setq mouse-yank-at-point t)
 (setq ring-bell-function 'ignore)
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1000)
-(setq truncate-partial-width-windows nil)
+(setq sentence-end-double-space nil)
 
+;; Indentation
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
 (setq-default require-final-newline nil)
@@ -149,7 +152,6 @@
 
   (use-package counsel
     :config
-
     (global-set-key (kbd "M-x") 'counsel-M-x)
     (global-set-key (kbd "C-x C-m") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
@@ -176,8 +178,8 @@
 (use-package magit
   :bind (("C-x g" . magit-status)
          ("C-c m" . magit-status))
-  :init
 
+  :config
   (use-package with-editor)
   (use-package git-commit)
 
@@ -289,8 +291,7 @@
 
 (use-package which-key
   :diminish which-key-mode
-  :config
-  (which-key-mode 1))
+  :config (which-key-mode 1))
 
 (use-package yasnippet
   :config
@@ -329,7 +330,7 @@ exists. If BACKWARDP is non-nil it jumps backward."
   (interactive)
   (jump-to-symbol-internal t))
 
-;; from https://github.com/larstvei/dot-emacs
+;; From https://github.com/larstvei/dot-emacs
 (defun jump-to-next-like-this ()
   "Jumps to the next occurrence of the symbol at point."
   (interactive)
@@ -372,30 +373,31 @@ argument is given, the duplicated region will be commented out."
 ;;; --- OS specifics ---
 
 ;; GNU/Linux
-(when (equal system-type 'gnu/linux)
+(when (memq system-type '(gnu gnu/linux gnu/kfreebsd))
   (when window-system
     (set-face-attribute 'default nil
                         :height 115
                         :family "Liberation Mono")))
 
 ;; Mac OS X
-(when (equal system-type 'darwin)
-  (setq ns-alternate-modifier 'none)
-  (setq ns-command-modifier 'meta)
-  (setq ns-function-modifier 'hyper)
-
-  ;; Fix comma on Apple USB Keyboard
-  (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
-
-  (setq delete-by-moving-to-trash t)
-  (setq trash-directory "~/.Trash/emacs")
-
+(when (memq system-type '(darwin))
   (when window-system
     (menu-bar-mode 1)
-    (set-face-attribute 'default nil :height 150)))
+    (set-face-attribute 'default nil :height 150)
+
+    ;; Fix comma on Norwegian Apple USB Keyboard keypad
+    (define-key function-key-map (kbd "<kp-decimal>") (kbd ",")))
+
+    (when (equal window-system 'ns)
+      (setq ns-alternate-modifier 'none)
+      (setq ns-command-modifier 'meta)
+      (setq ns-function-modifier 'hyper))
+
+  (setq delete-by-moving-to-trash t)
+  (setq trash-directory "~/.Trash/emacs"))
 
 ;; Windows
-(when (equal system-type 'windows-nt)
+(when (memq system-type '(ms-dos windows-nt cygwin))
   (when window-system
     (set-face-attribute 'default nil :height 115)
     (set-face-attribute 'default nil :family "Lucida Console")))
@@ -445,7 +447,7 @@ argument is given, the duplicated region will be commented out."
 
 ;;; --- Private ---
 
-;; Load private.el if it exists (From https://github.com/larstvei/dot-emacs)
+;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
 (add-hook
  'after-init-hook
  (lambda ()
