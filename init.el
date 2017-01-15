@@ -73,6 +73,8 @@
 
 (use-package calendar
   :config
+  (setq calendar-week-start-day 1)
+
   ;; https://www.emacswiki.org/emacs/CalendarWeekNumbers
   (copy-face font-lock-constant-face 'calendar-iso-week-face)
   (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
@@ -82,8 +84,7 @@
                   (car
                    (calendar-iso-from-absolute
                     (calendar-absolute-from-gregorian (list month day year)))))
-          'font-lock-face 'calendar-iso-week-face))
-  (setq calendar-week-start-day 1))
+          'font-lock-face 'calendar-iso-week-face)))
 
 (use-package company
   :diminish company-mode
@@ -224,7 +225,6 @@
   :config (pdf-tools-install))
 
 (use-package recentf
-  :defer 10
   :commands (recentf-mode
              recentf-add-file
              recentf-apply-filename-handlers)
