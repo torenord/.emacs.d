@@ -221,14 +221,21 @@
 (use-package pdf-tools
   :if (window-system)
   :mode "\\.pdf\\'"
+  :config (pdf-tools-install))
+
+(use-package recentf
+  :defer 10
+  :commands (recentf-mode
+             recentf-add-file
+             recentf-apply-filename-handlers)
+  :init
+  (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
   :config
-  (pdf-tools-install))
+  (recentf-mode 1))
 
 (use-package server
   :if window-system
-  :config
-  (unless (server-running-p)
-    (server-start)))
+  :config (unless (server-running-p) (server-start)))
 
 (use-package shell
   :bind (("C-z" . toggle-shell)
