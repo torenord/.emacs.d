@@ -54,6 +54,25 @@
 ;; Locale
 (set-locale-environment "no_NO.UTF-8")
 
+;;; --- Key-bindings ---
+
+; Goto init.el
+(global-set-key
+ (kbd "M-,")
+ (lambda ()
+   (interactive)
+   (find-file (expand-file-name "init.el" user-emacs-directory))))
+
+;; Jump by paragraph
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
+
+; Kill the current buffer
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+
+;; Kill all buffers except for internal ones
+(global-set-key (kbd "<f12>") 'desktop-clear)
+
 ;;; --- Packages ---
 
 (require 'package)
@@ -228,8 +247,6 @@
   :commands (recentf-mode
              recentf-add-file
              recentf-apply-filename-handlers)
-  :init
-  (add-hook 'dired-mode-hook 'recentf-add-dired-directory)
   :config
   (recentf-mode 1))
 
@@ -314,34 +331,7 @@
     (indent-region beg end)
     (whitespace-cleanup)
     (untabify beg (if (< end (point-max)) end (point-max)))))
-
-;; From https://github.com/larstvei/dot-emacs
-(defun jump-to-symbol-internal (&optional backwardp)
-  "Jumps to the next symbol near the point if such a symbol
-exists. If BACKWARDP is non-nil it jumps backward."
-  (let* ((point (point))
-         (bounds (find-tag-default-bounds))
-         (beg (car bounds)) (end (cdr bounds))
-         (str (isearch-symbol-regexp (find-tag-default)))
-         (search (if backwardp 'search-backward-regexp
-                   'search-forward-regexp)))
-    (goto-char (if backwardp beg end))
-    (funcall search str nil t)
-    (cond ((<= beg (point) end) (goto-char point))
-          (backwardp (forward-char (- point beg)))
-          (t  (backward-char (- end point))))))
-
-;; From https://github.com/larstvei/dot-emacs
-(defun jump-to-previous-like-this ()
-  "Jumps to the previous occurrence of the symbol at point."
-  (interactive)
-  (jump-to-symbol-internal t))
-
-;; From https://github.com/larstvei/dot-emacs
-(defun jump-to-next-like-this ()
-  "Jumps to the next occurrence of the symbol at point."
-  (interactive)
-  (jump-to-symbol-internal))
+(global-set-key (kbd "<C-tab>") 'tidy)
 
 ;; From https://github.com/larstvei/dot-emacs
 (defun duplicate-thing (comment)
@@ -356,6 +346,11 @@ argument is given, the duplicated region will be commented out."
         (newline))
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
+(global-set-key (kbd "C-c d") 'duplicate-thing)
+
+;; Plain Org Wiki
+(load-file "~/.emacs.d/plain-org-wiki.el")
+(global-set-key (kbd "C-c w") 'plain-org-wiki)
 
 (defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
   "Kill up to the ARG'th occurence of CHAR, and leave CHAR. If
@@ -373,9 +368,6 @@ argument is given, the duplicated region will be commented out."
         (backward-kill-sexp)
         (forward-sexp))
     ad-do-it))
-
-(load-file "~/.emacs.d/plain-org-wiki.el")
-(global-set-key (kbd "C-c w") 'plain-org-wiki)
 
 ;;; --- OS specifics ---
 
@@ -419,38 +411,6 @@ argument is given, the duplicated region will be commented out."
     (mapc 'disable-theme custom-enabled-themes))
 
   (load-theme 'adwaita t))
-
-;;; --- Key-bindings ---
-
-;; Jump to next window
-(global-set-key (kbd "M-'") 'next-multiframe-window)
-
-;; Jump by paragraph
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
-
-;; Goto init.el
-(global-set-key
- (kbd "M-,")
- (lambda ()
-   (interactive)
-   (find-file (expand-file-name "init.el" user-emacs-directory))))
-
-;; Go fullscreen
-(global-set-key (kbd "M-<f11>") 'toggle-frame-fullscreen)
-
-(global-set-key (kbd "C-c d") 'duplicate-thing)
-
-(global-set-key (kbd "C-,") 'jump-to-previous-like-this)
-(global-set-key (kbd "C-.") 'jump-to-next-like-this)
-
-(global-set-key (kbd "<C-tab>") 'tidy)
-
-;; Kill all buffers except for internal ones
-(global-set-key (kbd "<f12>") 'desktop-clear)
-
-;; Kill the current buffer
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;;; --- Private ---
 
