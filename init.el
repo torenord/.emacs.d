@@ -1,23 +1,18 @@
 ;;; --- Setup ---
 
 ;; Disable modes
-(dolist (mode
-         '(blink-cursor-mode
-           menu-bar-mode
-           scroll-bar-mode
-           tool-bar-mode
-           tooltip-mode))
-  (if (fboundp mode) (funcall mode -1)))
+(blink-cursor-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
 
 ;; Enable modes
-(dolist (mode
-         '(column-number-mode
-           delete-selection-mode
-           winner-mode))
-  (if (fboundp mode) (funcall mode 1)))
+(column-number-mode 1)
+(delete-selection-mode 1)
+(winner-mode 1)
 
 ;; Sane defaults
-
 (fset 'display-startup-echo-area-message 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
 
@@ -137,6 +132,7 @@
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
+  (setq drag-stuff-modifier '(meta shift))
   (drag-stuff-global-mode 1)
   (drag-stuff-define-keys))
 
