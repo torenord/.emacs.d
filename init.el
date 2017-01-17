@@ -1,7 +1,7 @@
 ;;; --- Setup ---
 
 ;; Turn off garbage collection during startup. Turn back on when
-;; startup is complete, and set new threshold to 8MB.
+;; startup is complete, but set new threshold to 8MB.
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 8388608)))
 
