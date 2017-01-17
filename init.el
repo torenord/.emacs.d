@@ -134,9 +134,6 @@
   (setq-default dired-details-hidden-string "--- ")
   (dired-details-install))
 
-(use-package dired-narrow
-  :bind ("C-c f" . dired-narrow))
-
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
@@ -189,11 +186,14 @@
     :config
     (global-set-key (kbd "C-c s") 'swiper)))
 
-(use-package ledger-mode
-  :mode "\\.ledger\\'")
+(use-package ledger-mode :mode "\\.ledger\\'")
 
-(use-package macrostep
-  :bind ("C-c e m" . macrostep-expand))
+(use-package lispy
+  :config
+  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
+  (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1))))
+
+(use-package macrostep :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
@@ -216,22 +216,13 @@
 
 (use-package markdown-mode)
 
-(use-package maude-mode
-  :mode "\\.fm\\'")
+(use-package maude-mode :mode "\\.fm\\'")
 
 (use-package multi-term)
 
 (use-package multiple-cursors
   :bind (("M-ø" . mc/mark-next-like-this)
-         ("M-Ø" . mc/mark-all-like-this)
-         ("C-c e" . mc/edit-lines)))
-
-(use-package paredit
-  :diminish "()"
-  :config
-  (add-hook 'cider-repl-mode-hook 'paredit-mode)
-  (add-hook 'clojure-mode-hook 'paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
+         ("M-Ø" . mc/mark-all-like-this)))
 
 (use-package paren
   :config
@@ -239,7 +230,7 @@
   (show-paren-mode 1))
 
 (use-package pdf-tools
-  :if (window-system)
+  :if window-system
   :mode "\\.pdf\\'"
   :config (pdf-tools-install))
 
@@ -385,12 +376,14 @@ argument is given, the duplicated region will be commented out."
     (set-face-attribute 'default nil :height 150)
 
     ;; Fix comma on Norwegian Apple USB Keyboard keypad
-    (define-key function-key-map (kbd "<kp-decimal>") (kbd ",")))
+    (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
 
     (when (equal window-system 'ns)
       (setq ns-alternate-modifier 'none)
       (setq ns-command-modifier 'meta)
-      (setq ns-function-modifier 'hyper))
+      (setq ns-function-modifier 'hyper)
+
+      (set-face-attribute 'default nil :height 150)))
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs"))
