@@ -56,7 +56,7 @@
 
 ;;; --- Key-bindings ---
 
-; Goto init.el
+;; Goto init.el
 (global-set-key
  (kbd "M-,")
  (lambda ()
@@ -67,11 +67,14 @@
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
 
-; Kill the current buffer
+;; Kill the current buffer
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 
 ;; Kill all buffers except for internal ones
 (global-set-key (kbd "<f12>") 'desktop-clear)
+
+;; Jump to next window
+(global-set-key (kbd "M-'") 'next-multiframe-window)
 
 ;;; --- Packages ---
 
@@ -89,6 +92,8 @@
 (require 'use-package)
 
 (setq use-package-always-ensure t)
+
+(use-package browse-kill-ring+)
 
 (use-package calendar
   :config
@@ -309,10 +314,6 @@
   :diminish which-key-mode
   :config (which-key-mode 1))
 
-(use-package yasnippet
-  :config
-  (yas-global-mode))
-
 ;;; --- Various ---
 
 (defun tidy ()
@@ -408,10 +409,6 @@ argument is given, the duplicated region will be commented out."
 
 ;;; --- Private ---
 
-;; Load private.el if it exists (from https://github.com/larstvei/dot-emacs)
-(add-hook
- 'after-init-hook
- (lambda ()
-   (let ((private-file (concat user-emacs-directory "private.el")))
-     (when (file-exists-p private-file)
-       (load-file private-file)))))
+(let ((private-file (concat user-emacs-directory "private.el")))
+  (when (file-exists-p private-file)
+    (load-file private-file)))
