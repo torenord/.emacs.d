@@ -383,9 +383,7 @@ argument is given, the duplicated region will be commented out."
     (when (equal window-system 'ns)
       (setq ns-alternate-modifier 'none)
       (setq ns-command-modifier 'meta)
-      (setq ns-function-modifier 'hyper)
-
-      (set-face-attribute 'default nil :height 150)))
+      (setq ns-function-modifier 'hyper)))
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs"))
