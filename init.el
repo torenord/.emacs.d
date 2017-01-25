@@ -1,9 +1,9 @@
 ;;; --- Setup ---
 
 ;; Turn off garbage collection during startup. Turn back on when
-;; startup is complete, but set new threshold to 8MB.
+;; startup is complete, but set new threshold to 100MB.
 (setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 8388608)))
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 104857600)))
 
 ;; Disable modes
 (blink-cursor-mode -1)
@@ -96,6 +96,7 @@
 (use-package browse-kill-ring+)
 
 (use-package calendar
+  :defer
   :config
   (setq calendar-week-start-day 1)
 
@@ -142,18 +143,19 @@
 (use-package drag-stuff
   :diminish drag-stuff-mode
   :config
-  (setq drag-stuff-modifier '(meta shift))
+  (setq drag-stuff-modifier '(meta control shift))
   (drag-stuff-global-mode 1)
   (drag-stuff-define-keys))
 
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
+  :if (memq window-system '(ns))
   :config (exec-path-from-shell-initialize))
 
 (use-package expand-region
   :bind ("M-æ" . er/expand-region))
 
 (use-package flycheck
+  :disabled t
   :config
   (global-flycheck-mode))
 
@@ -197,7 +199,10 @@
 (use-package lispy
   :config
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-  (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1))))
+  (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1)))
+
+  (define-key lispy-mode-map (kbd "M-,") nil)
+  (define-key lispy-mode-map (kbd "M-.") nil))
 
 (use-package macrostep :bind ("C-c e m" . macrostep-expand))
 
@@ -220,11 +225,11 @@
     ad-do-it
     (delete-other-windows)))
 
-(use-package markdown-mode)
+(use-package markdown-mode :defer)
 
 (use-package maude-mode :mode "\\.fm\\'")
 
-(use-package multi-term)
+(use-package multi-term :defer)
 
 (use-package multiple-cursors
   :bind (("M-ø" . mc/mark-next-like-this)
@@ -248,6 +253,7 @@
   (recentf-mode 1))
 
 (use-package server
+  :defer 0.1
   :if window-system
   :config (unless (server-running-p) (server-start)))
 
@@ -298,9 +304,10 @@
         (shell)
         (set-process-query-on-exit-flag (get-process "shell") nil)))))
 
-(use-package try)
+(use-package try :defer)
 
 (use-package undo-tree
+  :defer 0.1
   :diminish undo-tree-mode
   :config (global-undo-tree-mode))
 
@@ -311,8 +318,14 @@
          "\\.css\\'"))
 
 (use-package which-key
+  :defer 0.1
   :diminish which-key-mode
   :config (which-key-mode 1))
+
+(use-package yasnippet
+  :defer 5
+  :config
+  (yas-global-mode 1))
 
 ;;; --- Various ---
 
@@ -399,11 +412,8 @@ argument is given, the duplicated region will be commented out."
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b")))
 
-  (defadvice load-theme
-      (before disable-before-load (theme &optional no-confirm no-enable) activate)
-    (mapc 'disable-theme custom-enabled-themes))
-
-  (load-theme 'adwaita t))
+  (add-to-list 'default-frame-alist '(foreground-color . "#ffffff"))
+  (add-to-list 'default-frame-alist '(background-color . "#000000")))
 
 ;;; --- Private ---
 
