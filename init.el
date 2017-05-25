@@ -56,13 +56,6 @@
 
 ;;; --- Key-bindings ---
 
-;; Goto init.el
-(global-set-key
- (kbd "M-,")
- (lambda ()
-   (interactive)
-   (find-file (expand-file-name "init.el" user-emacs-directory))))
-
 ;; Jump by paragraph
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
@@ -243,7 +236,13 @@
 (use-package pdf-tools
   :if window-system
   :mode "\\.pdf\\'"
-  :config (pdf-tools-install))
+  :config
+  (add-hook 'pdf-tools-enabled-hook
+            (lambda ()
+              (setq buffer-face-mode-face `(:background "#eeeeee"))
+              (buffer-face-mode 1)))
+
+  (pdf-tools-install))
 
 (use-package recentf
   :commands (recentf-mode
@@ -354,10 +353,6 @@ argument is given, the duplicated region will be commented out."
       (when comment (comment-region start end)))))
 (global-set-key (kbd "C-c d") 'duplicate-thing)
 
-;; Plain Org Wiki
-(load-file "~/.emacs.d/plain-org-wiki.el")
-(global-set-key (kbd "C-c w") 'plain-org-wiki)
-
 (defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
   "Kill up to the ARG'th occurence of CHAR, and leave CHAR. If
   you are deleting forward, the CHAR is replaced and the point is
@@ -410,10 +405,27 @@ argument is given, the duplicated region will be commented out."
 ;;; --- Apperance ---
 
 (when window-system
-  (setq frame-title-format '(buffer-file-name "%f" ("%b")))
+  (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
-  (add-to-list 'default-frame-alist '(foreground-color . "#ffffff"))
-  (add-to-list 'default-frame-alist '(background-color . "#000000")))
+(defun make-black ()
+  (interactive)
+  (set-face-attribute 'default nil :foreground "#ffffff" :background "#313739")
+  (set-face-attribute 'cursor nil :background "#ffffff"))
+
+(defun make-white ()
+  (interactive)
+  (set-face-attribute 'default nil :foreground "#313739" :background "#ffffff")
+  (set-face-attribute 'cursor nil :background "#313739"))
+
+(setq is-white t)
+
+(defun toggle ()
+  (interactive)
+  (if is-white
+      (progn (make-black) (setq is-white nil))
+    (progn (make-white) (setq is-white t))))
+
+(global-set-key (kbd "<f9>") 'toggle)
 
 ;;; --- Private ---
 
