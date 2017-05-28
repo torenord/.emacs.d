@@ -147,23 +147,6 @@
 (use-package expand-region
   :bind ("M-æ" . er/expand-region))
 
-(use-package flycheck
-  :disabled t
-  :config
-  (global-flycheck-mode))
-
-(use-package flyspell
-  :config
-  (setq ispell-program-name "hunspell")
-  (ispell-change-dictionary "en_US")
-
-  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (add-hook 'text-mode-hook 'flyspell-mode)
-
-  (use-package flyspell-popup
-    :config
-    (add-hook 'flyspell-mode-hook #'flyspell-popup-auto-correct-mode)))
-
 (use-package ivy
   :config
   (ivy-mode 1)
@@ -192,10 +175,7 @@
 (use-package lispy
   :config
   (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-  (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1)))
-
-  (define-key lispy-mode-map (kbd "M-,") nil)
-  (define-key lispy-mode-map (kbd "M-.") nil))
+  (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1))))
 
 (use-package macrostep :bind ("C-c e m" . macrostep-expand))
 
@@ -372,18 +352,10 @@ argument is given, the duplicated region will be commented out."
 
 ;;; --- OS specifics ---
 
-;; GNU/Linux
-(when (memq system-type '(gnu gnu/linux gnu/kfreebsd))
-  (when window-system
-    (set-face-attribute 'default nil
-                        :height 115
-                        :family "Liberation Mono")))
-
 ;; Mac OS X
 (when (memq system-type '(darwin))
   (when window-system
     (menu-bar-mode 1)
-    (set-face-attribute 'default nil :height 150)
 
     ;; Fix comma on Norwegian Apple USB Keyboard keypad
     (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
@@ -395,12 +367,6 @@ argument is given, the duplicated region will be commented out."
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs"))
-
-;; Windows
-(when (memq system-type '(ms-dos windows-nt cygwin))
-  (when window-system
-    (set-face-attribute 'default nil :height 115)
-    (set-face-attribute 'default nil :family "Lucida Console")))
 
 ;;; --- Apperance ---
 
