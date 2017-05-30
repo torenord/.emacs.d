@@ -237,6 +237,7 @@
   :config (unless (server-running-p) (server-start)))
 
 (use-package shell
+  :disabled t
   :bind (("C-z" . toggle-shell)
          ("C-x C-z" . toggle-shell))
   :config
@@ -349,6 +350,33 @@ argument is given, the duplicated region will be commented out."
         (backward-kill-sexp)
         (forward-sexp))
     ad-do-it))
+
+(defun torenord/multi-term-toggle ()
+  (interactive)
+  (if (string-match-p "^\\*terminal<[1-9][0-9]*>\\*$" (buffer-name))
+      (switch-to-prev-buffer)
+    (torenord/multi-term-switch 1)))
+
+(global-set-key (kbd "C-z") 'torenord/multi-term-toggle)
+(global-set-key (kbd "C-x C-z") 'multi-term-dedicated-toggle)
+
+(defun torenord/multi-term-switch (N)
+  (let ((buffer-name (format "*terminal<%d>*" N)))
+    (cond ((get-buffer buffer-name)
+           (switch-to-buffer buffer-name))
+          (t
+           (multi-term)
+           (rename-buffer buffer-name)))))
+
+(global-set-key (kbd "M-1") (lambda () (interactive) (torenord/multi-term-switch 1)))
+(global-set-key (kbd "M-2") (lambda () (interactive) (torenord/multi-term-switch 2)))
+(global-set-key (kbd "M-3") (lambda () (interactive) (torenord/multi-term-switch 3)))
+(global-set-key (kbd "M-4") (lambda () (interactive) (torenord/multi-term-switch 4)))
+(global-set-key (kbd "M-5") (lambda () (interactive) (torenord/multi-term-switch 5)))
+(global-set-key (kbd "M-6") (lambda () (interactive) (torenord/multi-term-switch 6)))
+(global-set-key (kbd "M-7") (lambda () (interactive) (torenord/multi-term-switch 7)))
+(global-set-key (kbd "M-8") (lambda () (interactive) (torenord/multi-term-switch 8)))
+(global-set-key (kbd "M-9") (lambda () (interactive) (torenord/multi-term-switch 9)))
 
 ;;; --- OS specifics ---
 
