@@ -82,6 +82,7 @@
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 (require 'use-package)
 
 (setq use-package-always-ensure t)
@@ -132,13 +133,6 @@
 
   (setq-default dired-details-hidden-string "--- ")
   (dired-details-install))
-
-(use-package drag-stuff
-  :diminish drag-stuff-mode
-  :config
-  (setq drag-stuff-modifier '(meta control shift))
-  (drag-stuff-global-mode 1)
-  (drag-stuff-define-keys))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(ns))
@@ -200,13 +194,25 @@
 
 (use-package markdown-mode :defer)
 
-(use-package maude-mode :mode "\\.fm\\'")
+(use-package maude-mode
+  :mode ("\\.fm\\'"
+         "\\.rtmaude\\'"))
 
 (use-package multi-term :defer)
 
 (use-package multiple-cursors
   :bind (("M-ø" . mc/mark-next-like-this)
          ("M-Ø" . mc/mark-all-like-this)))
+
+(use-package org
+  :defer
+  :ensure nil
+  :init
+  (let* ((package--builtins '())
+         (missing (remove-if 'package-installed-p '(org))))
+    (when missing
+      (package-refresh-contents)
+      (mapc 'package-install missing))))
 
 (use-package paren
   :config
@@ -300,12 +306,9 @@
 (use-package which-key
   :defer 0.1
   :diminish which-key-mode
-  :config (which-key-mode 1))
-
-(use-package yasnippet
-  :defer 5
   :config
-  (yas-global-mode 1))
+  (setq which-key-idle-delay 0.3)
+  (which-key-mode 1))
 
 ;;; --- Various ---
 
@@ -351,11 +354,31 @@ argument is given, the duplicated region will be commented out."
         (forward-sexp))
     ad-do-it))
 
-(defun torenord/multi-term-toggle ()
-  (interactive)
-  (if (string-match-p "^\\*terminal<[1-9][0-9]*>\\*$" (buffer-name))
-      (switch-to-prev-buffer)
-    (torenord/multi-term-switch 1)))
+;;; --- Multi Term ---
+
+(lexical-let ((last-term 1))
+  (defun torenord/multi-term-toggle ()
+    (interactive)
+    (if (string-match-p "^\\*terminal<[1-9][0-9]*>\\*$" (buffer-name))
+        (torenord/goto-non-terminal-buffer)
+      (torenord/multi-term-switch last-term)))
+
+  (defun torenord/multi-term-switch (N)
+    (setq last-term N)
+    (let ((buffer-name (format "*terminal<%d>*" N)))
+      (cond ((get-buffer buffer-name)
+             (switch-to-buffer buffer-name))
+            (t
+             (set-process-query-on-exit-flag (get-buffer-process (multi-term)) nil)
+             (rename-buffer buffer-name)))))
+
+  (defun torenord/goto-non-terminal-buffer ()
+    (interactive)
+    (let* ((r "^\\*terminal<[1-9][0-9]*>\\*$")
+           (terminal-buffer-p (lambda (b) (string-match-p r (buffer-name b))))
+           (non-terminals (cl-remove-if terminal-buffer-p (buffer-list))))
+      (when non-terminals
+        (switch-to-buffer (first non-terminals))))))
 
 (global-set-key (kbd "C-z") 'torenord/multi-term-toggle)
 (global-set-key (kbd "C-x C-z") 'multi-term-dedicated-toggle)
@@ -377,6 +400,16 @@ argument is given, the duplicated region will be commented out."
 (global-set-key (kbd "M-7") (lambda () (interactive) (torenord/multi-term-switch 7)))
 (global-set-key (kbd "M-8") (lambda () (interactive) (torenord/multi-term-switch 8)))
 (global-set-key (kbd "M-9") (lambda () (interactive) (torenord/multi-term-switch 9)))
+
+;; Should be: If in *terminal<N>* goto *terminal<N+1>*.
+(global-set-key (kbd "M-<left>") 'multi-term-prev)
+(global-set-key (kbd "M-<right>") 'multi-term-next)
+
+(dolist (n (number-sequence 1 9))
+  (global-set-key (kbd (concat "M-" (int-to-string n)))
+                  (lambda () (interactive) (torenord/multi-term-switch n))))
+
+(setq multi-term-dedicated-select-after-open-p t)
 
 ;;; --- OS specifics ---
 
