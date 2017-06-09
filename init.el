@@ -71,6 +71,7 @@
 
 ;;; --- Packages ---
 
+(require 'cl)
 (require 'package)
 
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
@@ -135,11 +136,17 @@
   (dired-details-install))
 
 (use-package exec-path-from-shell
-  :if (memq window-system '(ns))
+  :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
 
 (use-package expand-region
   :bind ("M-æ" . er/expand-region))
+
+(use-package git-gutter-fringe
+  :if window-system
+  :diminish git-gutter-mode
+  :config
+  (global-git-gutter-mode 1))
 
 (use-package ivy
   :config
@@ -166,27 +173,12 @@
 
 (use-package ledger-mode :mode "\\.ledger\\'")
 
-(use-package lispy
-  :config
-  (add-hook 'emacs-lisp-mode-hook (lambda () (lispy-mode 1)))
-  (add-hook 'scheme-mode-hook (lambda () (lispy-mode 1))))
-
 (use-package macrostep :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
   :bind (("C-x g" . magit-status)
          ("C-c m" . magit-status))
-
   :config
-  (use-package with-editor)
-  (use-package git-commit)
-
-  (use-package git-gutter-fringe
-    :if (window-system)
-    :diminish git-gutter-mode
-    :config
-    (global-git-gutter-mode 1))
-
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
     ad-do-it
@@ -207,17 +199,12 @@
 (use-package org
   :defer
   :ensure nil
-  :init
+  :config
   (let* ((package--builtins '())
          (missing (remove-if 'package-installed-p '(org))))
     (when missing
       (package-refresh-contents)
       (mapc 'package-install missing))))
-
-(use-package paren
-  :config
-  (setq show-paren-delay 0)
-  (show-paren-mode 1))
 
 (use-package pdf-tools
   :if window-system
@@ -230,20 +217,13 @@
 
   (pdf-tools-install))
 
-(use-package recentf
-  :commands (recentf-mode
-             recentf-add-file
-             recentf-apply-filename-handlers)
-  :config
-  (recentf-mode 1))
-
 (use-package server
   :defer 0.1
   :if window-system
   :config (unless (server-running-p) (server-start)))
 
 (use-package shell
-  :disabled t
+  :disabled
   :bind (("C-z" . toggle-shell)
          ("C-x C-z" . toggle-shell))
   :config
@@ -307,10 +287,13 @@
   :defer 0.1
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.3)
+  (setq which-key-idle-delay 0.5)
   (which-key-mode 1))
 
 ;;; --- Various ---
+
+(setq show-paren-delay 0)
+(show-paren-mode 1)
 
 (defun tidy ()
   "Ident, untabify and unwhitespacify current buffer, or region if active."
@@ -414,7 +397,7 @@ argument is given, the duplicated region will be commented out."
 ;;; --- OS specifics ---
 
 ;; Mac OS X
-(when (memq system-type '(darwin))
+(when (eq system-type 'darwin)
   (when window-system
     (menu-bar-mode 1)
 
