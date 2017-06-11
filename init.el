@@ -31,6 +31,8 @@
 (setq scroll-conservatively 1000)
 (setq sentence-end-double-space nil)
 
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
 ;; Indentation
 (setq-default indent-tabs-mode nil)
 (setq-default next-line-add-newlines nil)
@@ -184,7 +186,9 @@
   :mode ("\\.fm\\'"
          "\\.rtmaude\\'"))
 
-(use-package multi-term :defer)
+(use-package multi-term
+  :config
+  (require 'toggle-term))
 
 (use-package multiple-cursors
   :bind (("M-ø" . mc/mark-next-like-this)
