@@ -116,12 +116,6 @@
 
   (global-company-mode t))
 
-(use-package company-jedi
-  :config
-  (defun my/python-mode-hook ()
-    (add-to-list 'company-backends 'company-jedi))
-  (add-hook 'python-mode-hook 'my/python-mode-hook))
-
 (use-package dired-details
   :config
   (if (executable-find "gls")
@@ -336,63 +330,6 @@ argument is given, the duplicated region will be commented out."
         (backward-kill-sexp)
         (forward-sexp))
     ad-do-it))
-
-;;; --- Multi Term ---
-
-(lexical-let ((last-term 1))
-  (defun torenord/multi-term-toggle ()
-    (interactive)
-    (if (string-match-p "^\\*terminal<[1-9][0-9]*>\\*$" (buffer-name))
-        (torenord/goto-non-terminal-buffer)
-      (torenord/multi-term-switch last-term)))
-
-  (defun torenord/multi-term-switch (N)
-    (setq last-term N)
-    (let ((buffer-name (format "*terminal<%d>*" N)))
-      (cond ((get-buffer buffer-name)
-             (switch-to-buffer buffer-name))
-            (t
-             (set-process-query-on-exit-flag (get-buffer-process (multi-term)) nil)
-             (rename-buffer buffer-name)))))
-
-  (defun torenord/goto-non-terminal-buffer ()
-    (interactive)
-    (let* ((r "^\\*terminal<[1-9][0-9]*>\\*$")
-           (terminal-buffer-p (lambda (b) (string-match-p r (buffer-name b))))
-           (non-terminals (cl-remove-if terminal-buffer-p (buffer-list))))
-      (when non-terminals
-        (switch-to-buffer (first non-terminals))))))
-
-(global-set-key (kbd "C-z") 'torenord/multi-term-toggle)
-(global-set-key (kbd "C-x C-z") 'multi-term-dedicated-toggle)
-
-(defun torenord/multi-term-switch (N)
-  (let ((buffer-name (format "*terminal<%d>*" N)))
-    (cond ((get-buffer buffer-name)
-           (switch-to-buffer buffer-name))
-          (t
-           (multi-term)
-           (rename-buffer buffer-name)))))
-
-(global-set-key (kbd "M-1") (lambda () (interactive) (torenord/multi-term-switch 1)))
-(global-set-key (kbd "M-2") (lambda () (interactive) (torenord/multi-term-switch 2)))
-(global-set-key (kbd "M-3") (lambda () (interactive) (torenord/multi-term-switch 3)))
-(global-set-key (kbd "M-4") (lambda () (interactive) (torenord/multi-term-switch 4)))
-(global-set-key (kbd "M-5") (lambda () (interactive) (torenord/multi-term-switch 5)))
-(global-set-key (kbd "M-6") (lambda () (interactive) (torenord/multi-term-switch 6)))
-(global-set-key (kbd "M-7") (lambda () (interactive) (torenord/multi-term-switch 7)))
-(global-set-key (kbd "M-8") (lambda () (interactive) (torenord/multi-term-switch 8)))
-(global-set-key (kbd "M-9") (lambda () (interactive) (torenord/multi-term-switch 9)))
-
-;; Should be: If in *terminal<N>* goto *terminal<N+1>*.
-(global-set-key (kbd "M-<left>") 'multi-term-prev)
-(global-set-key (kbd "M-<right>") 'multi-term-next)
-
-(dolist (n (number-sequence 1 9))
-  (global-set-key (kbd (concat "M-" (int-to-string n)))
-                  (lambda () (interactive) (torenord/multi-term-switch n))))
-
-(setq multi-term-dedicated-select-after-open-p t)
 
 ;;; --- OS specifics ---
 
