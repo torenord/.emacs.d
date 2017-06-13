@@ -196,13 +196,14 @@
 
 (use-package org
   :defer
-  :ensure nil
   :config
   (let* ((package--builtins '())
          (missing (remove-if 'package-installed-p '(org))))
     (when missing
       (package-refresh-contents)
-      (mapc 'package-install missing))))
+      (mapc 'package-install missing)))
+
+  (use-package org-ref))
 
 (use-package pdf-tools
   :if window-system
