@@ -167,6 +167,10 @@
     :config
     (global-set-key (kbd "C-c s") 'swiper)))
 
+(use-package kotlin-mode
+  :config
+  (setq kotlin-tab-width 4))
+
 (use-package ledger-mode :mode "\\.ledger\\'")
 
 (use-package macrostep :bind ("C-c e m" . macrostep-expand))
@@ -335,6 +339,10 @@ argument is given, the duplicated region will be commented out."
         (backward-kill-sexp)
         (forward-sexp))
     ad-do-it))
+
+(defadvice load-theme
+    (before disable-before-load (theme &optional no-confirm no-enable) activate)
+  (mapc 'disable-theme custom-enabled-themes))
 
 ;;; --- OS specifics ---
 
