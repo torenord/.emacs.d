@@ -1,9 +1,7 @@
-;;; --- Setup ---
-
 ;; Turn off garbage collection during startup. Turn back on when
 ;; startup is complete, but set new threshold to 100MB.
 (setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 104857600)))
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 100000000)))
 
 ;; Disable modes
 (blink-cursor-mode -1)
@@ -52,17 +50,11 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; Locale
-(set-locale-environment "no_NO.UTF-8")
-
-;;; --- Key-bindings ---
-
-;; Jump by paragraph
+;; Key-bindings
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
-
-;; Kill the current buffer
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
 
 ;; Kill all buffers except for internal ones
 (global-set-key (kbd "<f12>") 'desktop-clear)
@@ -70,22 +62,17 @@
 ;; Jump to next window
 (global-set-key (kbd "M-'") 'next-multiframe-window)
 
-;;; --- Packages ---
-
-(require 'cl)
-(require 'package)
-
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/"))
+;;; Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (package-initialize)
 
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
 (when (not package-archive-contents)
   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-
-(require 'use-package)
 
 (setq use-package-always-ensure t)
 
@@ -366,7 +353,7 @@ argument is given, the duplicated region will be commented out."
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
-;;; --- Private ---
+;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (let ((private-file (concat user-emacs-directory "private.el")))
   (when (file-exists-p private-file)
