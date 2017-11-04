@@ -15,7 +15,6 @@
 ;; Enable modes
 (column-number-mode 1)
 (delete-selection-mode 1)
-(winner-mode 1)
 
 ;; Sane defaults
 (fset 'display-startup-echo-area-message 'ignore)
@@ -366,26 +365,6 @@ argument is given, the duplicated region will be commented out."
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
-
-(defun make-black ()
-  (interactive)
-  (set-face-attribute 'default nil :foreground "#ffffff" :background "#313739")
-  (set-face-attribute 'cursor nil :background "#ffffff"))
-
-(defun make-white ()
-  (interactive)
-  (set-face-attribute 'default nil :foreground "#313739" :background "#ffffff")
-  (set-face-attribute 'cursor nil :background "#313739"))
-
-(setq is-white t)
-
-(defun toggle ()
-  (interactive)
-  (if is-white
-      (progn (make-black) (setq is-white nil))
-    (progn (make-white) (setq is-white t))))
-
-(global-set-key (kbd "<f9>") 'toggle)
 
 ;;; --- Private ---
 
