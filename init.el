@@ -55,6 +55,8 @@
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "C-c m") 'execute-extended-command)
+(global-set-key (kbd "C-c C-m") 'execute-extended-command)
 
 ;; Kill all buffers except for internal ones
 (global-set-key (kbd "<f12>") 'desktop-clear)
@@ -77,22 +79,6 @@
 (setq use-package-always-ensure t)
 
 (use-package browse-kill-ring+)
-
-(use-package calendar
-  :defer
-  :config
-  (setq calendar-week-start-day 1)
-
-  ;; https://www.emacswiki.org/emacs/CalendarWeekNumbers
-  (copy-face font-lock-constant-face 'calendar-iso-week-face)
-  (set-face-attribute 'calendar-iso-week-face nil :height 0.7)
-  (setq calendar-intermonth-text
-        '(propertize
-          (format "%2d"
-                  (car
-                   (calendar-iso-from-absolute
-                    (calendar-absolute-from-gregorian (list month day year)))))
-          'font-lock-face 'calendar-iso-week-face)))
 
 (use-package company
   :diminish company-mode
@@ -162,8 +148,7 @@
 (use-package macrostep :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
-  :bind (("C-x g" . magit-status)
-         ("C-c m" . magit-status))
+  :bind ("C-x g" . magit-status)
   :config
   (defadvice magit-status (around magit-fullscreen activate)
     (window-configuration-to-register :magit-fullscreen)
@@ -308,13 +293,6 @@ argument is given, the duplicated region will be commented out."
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
 (global-set-key (kbd "C-c d") 'duplicate-thing)
-
-(defadvice zap-to-char (after my-zap-to-char-advice (arg char) activate)
-  "Kill up to the ARG'th occurence of CHAR, and leave CHAR. If
-  you are deleting forward, the CHAR is replaced and the point is
-  put before CHAR"
-  (insert char)
-  (if (< 0 arg) (forward-char -1)))
 
 (defadvice eval-last-sexp (around replace-sexp (arg) activate)
   "Replace sexp when called with a prefix argument."
