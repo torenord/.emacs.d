@@ -22,12 +22,14 @@
 (setq custom-file (make-temp-file ""))
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
+(setq ring-bell-function 'ignore)
+
 (setq load-prefer-newer t)
 (setq mouse-yank-at-point t)
-(setq ring-bell-function 'ignore)
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1000)
 (setq sentence-end-double-space nil)
+(setq tab-always-indent 'complete)
 
 (fset 'display-startup-echo-area-message 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -56,17 +58,6 @@
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
 
-;; Kill all buffers except for internal ones
-(global-set-key (kbd "<f12>") 'desktop-clear)
-
-;; (global-set-key (kbd "M-n") 'forward-paragraph)
-;; (global-set-key (kbd "M-p") 'backward-paragraph)
-;; (global-set-key (kbd "C-c m") 'execute-extended-command)
-;; (global-set-key (kbd "C-c C-m") 'execute-extended-command)
-
-;; Jump to next window
-(global-set-key (kbd "M-'") 'next-multiframe-window)
-
 ;;; Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (package-initialize)
@@ -81,6 +72,7 @@
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
+(setq use-package-verbose t)
 
 (use-package browse-kill-ring+)
 
@@ -121,7 +113,10 @@
   (global-git-gutter-mode 1))
 
 (use-package ivy
+  :defer 0.1
+  :diminish ivy-mode
   :config
+  (setq ivy-do-completion-in-region nil)
   (ivy-mode 1)
 
   (use-package counsel
@@ -267,6 +262,11 @@
   (which-key-mode 1))
 
 ;;; --- Various ---
+
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "C-c m") 'execute-extended-command)
+(global-set-key (kbd "C-c C-m") 'execute-extended-command)
 
 (setq show-paren-delay 0)
 (show-paren-mode 1)
