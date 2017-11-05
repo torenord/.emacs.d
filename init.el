@@ -1,3 +1,7 @@
+(defconst emacs-start-time (current-time))
+
+;;; Sane defaults ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Turn off garbage collection during startup. Turn back on when
 ;; startup is complete, but set new threshold to 100MB.
 (setq gc-cons-threshold most-positive-fixnum)
@@ -15,9 +19,6 @@
 (delete-selection-mode 1)
 
 ;; Sane defaults
-(fset 'display-startup-echo-area-message 'ignore)
-(fset 'yes-or-no-p 'y-or-n-p)
-
 (setq custom-file (make-temp-file ""))
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -28,7 +29,8 @@
 (setq scroll-conservatively 1000)
 (setq sentence-end-double-space nil)
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(fset 'display-startup-echo-area-message 'ignore)
+(fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Indentation
 (setq-default indent-tabs-mode nil)
@@ -51,15 +53,16 @@
 (prefer-coding-system 'utf-8)
 
 ;; Key-bindings
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
-(global-set-key (kbd "C-c m") 'execute-extended-command)
-(global-set-key (kbd "C-c C-m") 'execute-extended-command)
 
 ;; Kill all buffers except for internal ones
 (global-set-key (kbd "<f12>") 'desktop-clear)
+
+;; (global-set-key (kbd "M-n") 'forward-paragraph)
+;; (global-set-key (kbd "M-p") 'backward-paragraph)
+;; (global-set-key (kbd "C-c m") 'execute-extended-command)
+;; (global-set-key (kbd "C-c C-m") 'execute-extended-command)
 
 ;; Jump to next window
 (global-set-key (kbd "M-'") 'next-multiframe-window)
@@ -70,6 +73,7 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/"))
+
 (when (not package-archive-contents)
   (package-refresh-contents))
 
@@ -161,13 +165,11 @@
   :mode ("\\.fm\\'"
          "\\.rtmaude\\'"))
 
-(use-package multi-term
-  :config
-  (require 'toggle-term))
-
 (use-package multiple-cursors
-  :bind (("M-ø" . mc/mark-next-like-this)
-         ("M-Ø" . mc/mark-all-like-this)))
+  :bind (("C->" . mc/mark-next-like-this)
+         ("C-<" . mc/mark-previous-like-this)
+         ("C-c C-<" . mc/mark-all-like-this)
+         ("C-s-c C-s-c" . mc/edit-lines)))
 
 (use-package org
   :defer
@@ -294,6 +296,8 @@ argument is given, the duplicated region will be commented out."
       (when comment (comment-region start end)))))
 (global-set-key (kbd "C-c d") 'duplicate-thing)
 
+;;; Advice ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (defadvice eval-last-sexp (around replace-sexp (arg) activate)
   "Replace sexp when called with a prefix argument."
   (if arg
@@ -308,7 +312,7 @@ argument is given, the duplicated region will be commented out."
     (before disable-before-load (theme &optional no-confirm no-enable) activate)
   (mapc 'disable-theme custom-enabled-themes))
 
-;;; --- OS specifics ---
+;;; OS specifics ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Mac OS X
 (when (eq system-type 'darwin)
@@ -326,7 +330,7 @@ argument is given, the duplicated region will be commented out."
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs"))
 
-;;; --- Apperance ---
+;;; Appearance ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when window-system
   (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
@@ -336,3 +340,18 @@ argument is given, the duplicated region will be commented out."
 (let ((private-file (concat user-emacs-directory "private.el")))
   (when (file-exists-p private-file)
     (load-file private-file)))
+
+;;; Post initialization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(when window-system
+  (let ((elapsed (float-time (time-subtract (current-time)
+                                            emacs-start-time))))
+    (message "Loading %s...done (%.3fs)" load-file-name elapsed))
+
+  (add-hook 'after-init-hook
+            `(lambda ()
+               (let ((elapsed (float-time (time-subtract (current-time)
+                                                         emacs-start-time))))
+                 (message "Loading %s...done (%.3fs) [after-init]"
+                          ,load-file-name elapsed)))
+            t))
