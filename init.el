@@ -18,7 +18,7 @@
 (column-number-mode 1)
 (delete-selection-mode 1)
 
-;; Sane defaults
+;; Sanity
 (setq custom-file (make-temp-file ""))
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
@@ -28,8 +28,7 @@
 (setq mouse-yank-at-point t)
 (setq save-interprogram-paste-before-kill t)
 (setq scroll-conservatively 1000)
-(setq sentence-end-double-space nil)
-(setq tab-always-indent 'complete)
+(setq uniquify-buffer-name-style 'forward)
 
 (fset 'display-startup-echo-area-message 'ignore)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -261,7 +260,7 @@
   (setq which-key-idle-delay 0.5)
   (which-key-mode 1))
 
-;;; --- Various ---
+;;; Various ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
@@ -270,6 +269,13 @@
 
 (setq show-paren-delay 0)
 (show-paren-mode 1)
+
+(when window-system
+  (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
+
+(setq sentence-end-double-space nil)
+(setq tab-always-indent 'complete)
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups"))))
 
 (defun tidy ()
   "Ident, untabify and unwhitespacify current buffer, or region if active."
@@ -329,11 +335,6 @@ argument is given, the duplicated region will be commented out."
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs"))
-
-;;; Appearance ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(when window-system
-  (setq frame-title-format '(buffer-file-name "%f" ("%b"))))
 
 ;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
