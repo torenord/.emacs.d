@@ -73,6 +73,15 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 
+(use-package anaconda-mode
+  :config
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+
+  (use-package company-anaconda
+  :config
+  (add-to-list 'company-backends 'company-anaconda)))
+
 (use-package browse-kill-ring+)
 
 (use-package company
@@ -172,9 +181,7 @@
          (missing (remove-if 'package-installed-p '(org))))
     (when missing
       (package-refresh-contents)
-      (mapc 'package-install missing)))
-
-  (use-package org-ref))
+      (mapc 'package-install missing))))
 
 (use-package pdf-tools
   :if window-system
