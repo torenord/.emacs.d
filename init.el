@@ -267,6 +267,10 @@
   (setq which-key-idle-delay 0.5)
   (which-key-mode 1))
 
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
 ;;; Various ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
