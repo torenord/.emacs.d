@@ -217,10 +217,6 @@
 
   (setq-default comint-prompt-read-only t)
 
-  (add-hook 'shell-mode-hook
-            (lambda ()
-              (local-set-key (kbd "C-l") 'torenord/shell-clear)))
-
   (add-hook 'shell-mode-hook '(lambda () (toggle-truncate-lines -1)))
   (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
