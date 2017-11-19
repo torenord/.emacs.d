@@ -59,6 +59,8 @@
 
 ;;; Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(require 'cl)
+
 (package-initialize)
 
 (add-to-list 'package-archives
@@ -81,8 +83,6 @@
   (use-package company-anaconda
   :config
   (add-to-list 'company-backends 'company-anaconda)))
-
-(use-package browse-kill-ring+)
 
 (use-package company
   :diminish company-mode
@@ -112,7 +112,7 @@
   :config (exec-path-from-shell-initialize))
 
 (use-package expand-region
-  :bind ("M-æ" . er/expand-region))
+  :bind ("C-=" . er/expand-region))
 
 (use-package git-gutter-fringe
   :if window-system
@@ -140,7 +140,8 @@
     (global-set-key (kbd "C-c g") 'counsel-git)
     (global-set-key (kbd "C-c j") 'counsel-git-grep)
     (global-set-key (kbd "C-c k") 'counsel-ag)
-    (global-set-key (kbd "C-x l") 'counsel-locate))
+    (global-set-key (kbd "C-x l") 'counsel-locate)
+    (global-set-key (kbd "M-y") 'counsel-yank-pop))
 
   (use-package swiper
     :config
