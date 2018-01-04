@@ -7,6 +7,9 @@
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 100000000)))
 
+;; Warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
+
 ;; Disable modes
 (blink-cursor-mode -1)
 (menu-bar-mode -1)
