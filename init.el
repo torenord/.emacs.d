@@ -84,8 +84,8 @@
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
 
   (use-package company-anaconda
-  :config
-  (add-to-list 'company-backends 'company-anaconda)))
+    :config
+    (add-to-list 'company-backends 'company-anaconda)))
 
 (use-package company
   :diminish company-mode
@@ -96,19 +96,6 @@
   (define-key company-active-map (kbd "<tab>") 'company-complete)
 
   (global-company-mode t))
-
-(use-package dired-details
-  :config
-  (if (executable-find "gls")
-      (progn
-        (setq dired-use-ls-dired t)
-        (setq insert-directory-program (executable-find "gls")))
-    (progn
-      (setq ls-lisp-use-insert-directory-program nil)
-      (require 'ls-lisp)))
-
-  (setq-default dired-details-hidden-string "--- ")
-  (dired-details-install))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -345,7 +332,15 @@ argument is given, the duplicated region will be commented out."
       (setq ns-function-modifier 'hyper)))
 
   (setq delete-by-moving-to-trash t)
-  (setq trash-directory "~/.Trash/emacs"))
+  (setq trash-directory "~/.Trash/emacs")
+
+  (if (executable-find "gls")
+      (progn
+        (setq dired-use-ls-dired t)
+        (setq insert-directory-program (executable-find "gls")))
+    (progn
+      (setq ls-lisp-use-insert-directory-program nil)
+      (require 'ls-lisp))))
 
 ;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
