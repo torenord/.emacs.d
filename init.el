@@ -191,7 +191,6 @@
   :config (unless (server-running-p) (server-start)))
 
 (use-package shell
-  :disabled
   :bind (("C-z" . toggle-shell)
          ("C-x C-z" . toggle-shell))
   :config
