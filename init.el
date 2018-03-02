@@ -97,6 +97,10 @@
 
   (global-company-mode t))
 
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode))
+
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
@@ -104,11 +108,9 @@
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
 
-(use-package git-gutter-fringe
-  :if window-system
-  :diminish git-gutter-mode
+(use-package gradle-mode
   :config
-  (global-git-gutter-mode 1))
+  (use-package groovy-mode))
 
 (use-package ivy
   :defer 0.1
