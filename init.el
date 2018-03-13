@@ -78,6 +78,14 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 
+(use-package aggressive-fill-paragraph
+  :config
+  (aggressive-fill-paragraph-mode))
+
+(use-package aggressive-indent
+  :config
+  (aggressive-indent-mode))
+
 (use-package anaconda-mode
   :config
   (add-hook 'python-mode-hook 'anaconda-mode)
@@ -166,15 +174,6 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
          ("C-s-c C-s-c" . mc/edit-lines)))
-
-(use-package org
-  :defer
-  :config
-  (let* ((package--builtins '())
-         (missing (remove-if 'package-installed-p '(org))))
-    (when missing
-      (package-refresh-contents)
-      (mapc 'package-install missing))))
 
 (use-package pdf-tools
   :if window-system
@@ -265,6 +264,8 @@
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "C-c m") 'execute-extended-command)
 (global-set-key (kbd "C-c C-m") 'execute-extended-command)
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "C-l") 'recenter)
 
 (setq show-paren-delay 0)
 (show-paren-mode 1)
