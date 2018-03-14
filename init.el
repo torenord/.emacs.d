@@ -76,7 +76,6 @@
   (package-install 'use-package))
 
 (setq use-package-always-ensure t)
-(setq use-package-verbose t)
 
 (use-package anaconda-mode
   :defer
@@ -260,6 +259,8 @@
   (use-package yasnippet-snippets))
 
 ;;; Various ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(diminish 'eldoc-mode)
 
 (global-set-key (kbd "M-n") 'forward-paragraph)
 (global-set-key (kbd "M-p") 'backward-paragraph)
