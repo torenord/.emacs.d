@@ -2,4 +2,4 @@
 # name: ceq
 # key: ceq
 # --
-ceq [$1] : $2 = $3 .
+ceq [$1] : $2 = $3 if $0 .

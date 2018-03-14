@@ -3,5 +3,5 @@
 # key: fth
 # --
 fth $1 is
-    $2
+    $0
 endfth
