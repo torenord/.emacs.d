@@ -78,10 +78,6 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 
-(use-package aggressive-indent
-  :config
-  (global-aggressive-indent-mode 1))
-
 (use-package anaconda-mode
   :defer
   :init
