@@ -102,7 +102,12 @@
 
 (use-package diff-hl
   :config
-  (global-diff-hl-mode))
+  (global-diff-hl-mode)
+  (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
+  (unless window-system (diff-hl-margin-mode))
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+(use-package diminish)
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -112,6 +117,7 @@
   :bind ("C-=" . er/expand-region))
 
 (use-package gradle-mode
+  :defer 1
   :config
   (use-package groovy-mode))
 
@@ -142,9 +148,7 @@
     :config
     (global-set-key (kbd "C-c s") 'swiper)))
 
-(use-package kotlin-mode
-  :config
-  (setq kotlin-tab-width 4))
+(use-package kotlin-mode :defer :config (setq kotlin-tab-width 4))
 
 (use-package ledger-mode :mode "\\.ledger\\'")
 
@@ -160,9 +164,7 @@
 
 (use-package markdown-mode :defer)
 
-(use-package maude-mode
-  :mode ("\\.fm\\'"
-         "\\.rtmaude\\'"))
+(use-package maude-mode :defer)
 
 (use-package multiple-cursors
   :bind (("C->" . mc/mark-next-like-this)
@@ -250,7 +252,10 @@
   (which-key-mode 1))
 
 (use-package yasnippet
+  :defer 1
+  :diminish yas-minor-mode
   :config
+  (setq yas-verbosity 2)
   (yas-global-mode 1)
   (use-package yasnippet-snippets))
 
