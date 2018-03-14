@@ -78,22 +78,21 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 
-(use-package aggressive-fill-paragraph
-  :config
-  (afp-setup-recommended-hooks))
-
 (use-package aggressive-indent
   :config
   (global-aggressive-indent-mode 1))
 
 (use-package anaconda-mode
-  :config
+  :defer
+  :init
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
-
-  (use-package company-anaconda
-    :config
-    (add-to-list 'company-backends 'company-anaconda)))
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (use-package company-anaconda
+                :ensure
+                :config
+                (add-to-list 'company-backends 'company-anaconda)))))
 
 (use-package company
   :diminish company-mode
@@ -256,7 +255,8 @@
 
 (use-package yasnippet
   :config
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  (use-package yasnippet-snippets))
 
 ;;; Various ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
