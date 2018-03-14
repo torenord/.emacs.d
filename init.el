@@ -80,11 +80,11 @@
 
 (use-package aggressive-fill-paragraph
   :config
-  (aggressive-fill-paragraph-mode))
+  (afp-setup-recommended-hooks))
 
 (use-package aggressive-indent
   :config
-  (aggressive-indent-mode))
+  (global-aggressive-indent-mode 1))
 
 (use-package anaconda-mode
   :config
