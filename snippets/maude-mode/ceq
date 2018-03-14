@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: ceq
+# key: ceq
+# --
+ceq [$1] : $2 = $3 .

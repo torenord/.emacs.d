@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fth
+# key: fth
+# --
+fth $1 is
+    $2
+endfth

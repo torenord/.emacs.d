@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: view
+# key: view
+# --
+view $1 from $2 to $3 is
+    $4
+endv
