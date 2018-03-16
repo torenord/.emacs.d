@@ -1,5 +1,10 @@
 (defconst emacs-start-time (current-time))
 
+;; Set colors early to avoid flash of white before theme is loaded.
+(when window-system
+  (set-foreground-color "#ffffff")
+  (set-background-color "#263238"))
+
 ;;; Sane defaults ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; Turn off garbage collection during startup. Turn back on when
@@ -347,6 +352,12 @@ argument is given, the duplicated region will be commented out."
     (progn
       (setq ls-lisp-use-insert-directory-program nil)
       (require 'ls-lisp))))
+
+;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package material-theme
+  :config
+  (add-to-list 'default-frame-alist '(cursor-color . "white")))
 
 ;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
