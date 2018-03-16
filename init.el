@@ -89,6 +89,8 @@
                 :config
                 (add-to-list 'company-backends 'company-anaconda)))))
 
+(use-package autodisass-java-bytecode)
+
 (use-package company
   :diminish company-mode
   :config
