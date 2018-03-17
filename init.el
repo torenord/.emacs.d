@@ -12,15 +12,15 @@
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 100000000)))
 
-;; Warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
-
 ;; Disable modes
-(blink-cursor-mode -1)
-(menu-bar-mode -1)
-(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(tooltip-mode -1)
+(unless (eq window-system 'ns)
+    (menu-bar-mode -1))
+
+(when window-system
+  (blink-cursor-mode -1)
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1))
 
 ;; Enable modes
 (column-number-mode 1)
@@ -74,7 +74,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/"))
 
-(when (not package-archive-contents)
+(unless package-archive-contents
   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
@@ -310,6 +310,9 @@ argument is given, the duplicated region will be commented out."
       (insert (buffer-substring start end))
       (when comment (comment-region start end)))))
 (global-set-key (kbd "C-c d") 'duplicate-thing)
+
+;; Warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
 
 ;;; Advice ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
