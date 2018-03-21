@@ -94,9 +94,10 @@
                 :config
                 (add-to-list 'company-backends 'company-anaconda)))))
 
-(use-package autodisass-java-bytecode)
+(use-package autodisass-java-bytecode :mode "\\.class\\'")
 
 (use-package company
+  :defer 1
   :diminish company-mode
   :config
   (define-key company-active-map (kbd "C-d") 'company-show-doc-buffer)
