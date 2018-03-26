@@ -14,7 +14,7 @@
 
 ;; Disable modes
 (unless (eq window-system 'ns)
-    (menu-bar-mode -1))
+  (menu-bar-mode -1))
 
 (when window-system
   (blink-cursor-mode -1)
