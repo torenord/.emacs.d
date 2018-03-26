@@ -5,17 +5,16 @@
   (set-foreground-color "#ffffff")
   (set-background-color "#263238"))
 
-;;; Sane defaults ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; Turn off garbage collection during startup. Turn back on when
+;; Turn off garbage collection during startup. Then, turn back on when
 ;; startup is complete, but set new threshold to 100MB.
 (setq gc-cons-threshold most-positive-fixnum)
 (add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 100000000)))
 
-;; Disable modes
+;; Only keep menu bar in GUI on macOS.
 (unless (eq window-system 'ns)
   (menu-bar-mode -1))
 
+;; Disable modes
 (when window-system
   (blink-cursor-mode -1)
   (scroll-bar-mode -1)
@@ -61,9 +60,8 @@
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; Key-bindings
-(global-set-key (kbd "C-x k") 'kill-this-buffer)
-(global-set-key (kbd "M-z") 'zap-up-to-char)
+;; Warn when opening files bigger than 100MB
+(setq large-file-warning-threshold 100000000)
 
 ;;; Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -270,13 +268,6 @@
 
 (diminish 'eldoc-mode)
 
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
-(global-set-key (kbd "C-c m") 'execute-extended-command)
-(global-set-key (kbd "C-c C-m") 'execute-extended-command)
-(global-set-key (kbd "M-o") 'other-window)
-(global-set-key (kbd "C-l") 'recenter)
-
 (setq show-paren-delay 0)
 (show-paren-mode 1)
 
@@ -312,8 +303,16 @@ argument is given, the duplicated region will be commented out."
       (when comment (comment-region start end)))))
 (global-set-key (kbd "C-c d") 'duplicate-thing)
 
-;; Warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
+;;; Key-bindings ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "C-x k") 'kill-this-buffer)
+(global-set-key (kbd "M-z") 'zap-up-to-char)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
+(global-set-key (kbd "C-c m") 'execute-extended-command)
+(global-set-key (kbd "C-c C-m") 'execute-extended-command)
+(global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "C-l") 'recenter)
 
 ;;; Advice ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
