@@ -332,18 +332,15 @@ argument is given, the duplicated region will be commented out."
 
 ;;; OS specifics ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Mac OS X
+;; macOS
 (when (eq system-type 'darwin)
-  (when window-system
-    (menu-bar-mode 1)
+  (when (equal window-system 'ns)
+    (setq ns-alternate-modifier 'none)
+    (setq ns-command-modifier 'meta)
+    (setq ns-function-modifier 'hyper)
 
-    ;; Fix comma on Norwegian Apple USB Keyboard keypad
-    (define-key function-key-map (kbd "<kp-decimal>") (kbd ","))
-
-    (when (equal window-system 'ns)
-      (setq ns-alternate-modifier 'none)
-      (setq ns-command-modifier 'meta)
-      (setq ns-function-modifier 'hyper)))
+    (add-to-list 'default-frame-alist '(ns-appearance . dark))
+    (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs")
