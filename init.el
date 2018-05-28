@@ -248,7 +248,8 @@
   :mode ("\\.php\\'"
          "\\.html\\'"
          "\\.js\\'"
-         "\\.css\\'"))
+         "\\.css\\'"
+         "\\.jsp\\'"))
 
 (use-package which-key
   :defer 0.1
