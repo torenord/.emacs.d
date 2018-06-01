@@ -309,12 +309,12 @@ argument is given, the duplicated region will be commented out."
 
 (global-set-key (kbd "C-x k") 'kill-this-buffer)
 (global-set-key (kbd "M-z") 'zap-up-to-char)
-(global-set-key (kbd "M-n") 'forward-paragraph)
-(global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "C-c m") 'execute-extended-command)
 (global-set-key (kbd "C-c C-m") 'execute-extended-command)
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "C-l") 'recenter)
+(global-set-key (kbd "M-n") "\C-u1\C-v")
+(global-set-key (kbd "M-n") "\C-u1\M-v")
 
 ;;; Advice ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
