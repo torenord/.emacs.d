@@ -158,6 +158,8 @@
 
 (use-package ledger-mode :mode "\\.ledger\\'")
 
+(use-package lua-mode)
+
 (use-package macrostep :bind ("C-c e m" . macrostep-expand))
 
 (use-package magit
@@ -177,6 +179,8 @@
          ("C-<" . mc/mark-previous-like-this)
          ("C-c C-<" . mc/mark-all-like-this)
          ("C-s-c C-s-c" . mc/edit-lines)))
+
+(use-package olivetti :config (setq olivetti-body-width 120))
 
 (use-package pdf-tools
   :if window-system
