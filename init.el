@@ -317,8 +317,10 @@ argument is given, the duplicated region will be commented out."
 (global-set-key (kbd "C-c C-m") 'execute-extended-command)
 (global-set-key (kbd "M-o") 'other-window)
 (global-set-key (kbd "C-l") 'recenter)
-(global-set-key (kbd "M-n") "\C-u1\C-v")
-(global-set-key (kbd "M-p") "\C-u1\M-v")
+(global-set-key (kbd "M-{") 'scroll-up-line)
+(global-set-key (kbd "M-}") 'scroll-down-line)
+(global-set-key (kbd "M-n") 'forward-paragraph)
+(global-set-key (kbd "M-p") 'backward-paragraph)
 
 ;;; Advice ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
