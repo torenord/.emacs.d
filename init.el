@@ -2,8 +2,8 @@
 
 ;; Set colors early to avoid flash of white before theme is loaded.
 (when window-system
-  (set-foreground-color "#212121")
-  (set-background-color "#fafafa"))
+  (set-foreground-color "#ffffff")
+  (set-background-color "#263238"))
 
 ;; Turn off garbage collection during startup. Then, turn back on when
 ;; startup is complete, but set new threshold to 100MB.
@@ -347,6 +347,7 @@ argument is given, the duplicated region will be commented out."
     (setq ns-command-modifier 'meta)
     (setq ns-function-modifier 'hyper)
 
+    (add-to-list 'default-frame-alist '(ns-appearance . dark))
     (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
   (setq delete-by-moving-to-trash t)
@@ -364,8 +365,8 @@ argument is given, the duplicated region will be commented out."
 
 (use-package material-theme
   :config
-  (load-theme 'material-light t nil)
-  (add-to-list 'default-frame-alist '(cursor-color . "black")))
+  (load-theme 'material t nil)
+  (add-to-list 'default-frame-alist '(cursor-color . "white")))
 
 ;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
