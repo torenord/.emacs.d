@@ -2,8 +2,9 @@
 
 ;; Set colors early to avoid flash of white before theme is loaded.
 (when window-system
-  (set-foreground-color "#212121")
-  (set-background-color "#FAFAFA"))
+  (set-foreground-color "#ffffff")
+  (set-background-color "#263238")
+  (set-cursor-color "#ffffff"))
 
 ;; Turn off garbage collection during startup. Then, turn back on when
 ;; startup is complete, but set new threshold to 100MB.
@@ -31,6 +32,7 @@
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq ring-bell-function 'ignore)
+(setq use-dialog-box nil)
 
 (setq load-prefer-newer t)
 (setq mouse-yank-at-point t)
@@ -66,9 +68,8 @@
 
 ;;; Packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(require 'cl)
-
-(when (version< emacs-version "27.0") (package-initialize))
+(when (version< emacs-version "27.0")
+  (package-initialize))
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/"))
@@ -127,6 +128,8 @@
   :config
   (use-package groovy-mode))
 
+(use-package haskell-mode)
+
 (use-package ivy
   :defer 0.1
   :diminish ivy-mode
@@ -174,6 +177,13 @@
 
 (use-package maude-mode :defer)
 
+(use-package meghanada
+  :config
+  (add-hook 'java-mode-hook
+            (lambda ()
+              (meghanada-mode t)
+              (flycheck-mode t))))
+
 (use-package multiple-cursors
   :bind (("C->" . mc/mark-next-like-this)
          ("C-<" . mc/mark-previous-like-this)
@@ -192,6 +202,8 @@
               (buffer-face-mode 1)))
 
   (pdf-tools-install))
+
+(use-package projectile)
 
 (use-package server
   :defer 0.1
@@ -242,6 +254,8 @@
         (set-process-query-on-exit-flag (get-process "shell") nil)))))
 
 (use-package try :defer)
+
+(use-package typescript-mode)
 
 (use-package undo-tree
   :defer 0.1
@@ -347,7 +361,7 @@ argument is given, the duplicated region will be commented out."
     (setq ns-command-modifier 'meta)
     (setq ns-function-modifier 'hyper)
 
-    (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
+    (add-to-list 'default-frame-alist '(ns-appearance . dark)))
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs")
@@ -364,20 +378,15 @@ argument is given, the duplicated region will be commented out."
 
 (use-package material-theme
   :config
-  (load-theme 'material-light t nil)
-  (add-to-list 'default-frame-alist '(cursor-color . "black")))
+  (add-to-list 'default-frame-alist '(cursor-color . "white")))
 
 ;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(let ((private-file (concat user-emacs-directory "private.el")))
-  (when (file-exists-p private-file)
-    (load-file private-file)))
+(let ((custom-file (concat user-emacs-directory "custom.el")))
+  (when (file-exists-p custom-file)
+    (load-file custom-file)))
 
 ;;; Post initialization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          emacs-start-time))))
-  (message "Loading %s...done (%.3fs)" load-file-name elapsed))
 
 (add-hook 'after-init-hook
           `(lambda ()
