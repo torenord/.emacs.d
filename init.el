@@ -116,6 +116,8 @@
 
 (use-package diminish)
 
+(use-package editorconfig :config (editorconfig-mode 1))
+
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
   :config (exec-path-from-shell-initialize))
@@ -380,7 +382,7 @@ argument is given, the duplicated region will be commented out."
   :config
   (add-to-list 'default-frame-alist '(cursor-color . "white")))
 
-;;; Private ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (let ((custom-file (concat user-emacs-directory "custom.el")))
   (when (file-exists-p custom-file)
