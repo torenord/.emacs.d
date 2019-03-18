@@ -1,11 +1,5 @@
 (defconst emacs-start-time (current-time))
 
-;; Set colors early to avoid flash of white before theme is loaded.
-(when window-system
-  (set-foreground-color "#ffffff")
-  (set-background-color "#263238")
-  (set-cursor-color "#ffffff"))
-
 ;; Turn off garbage collection during startup. Then, turn back on when
 ;; startup is complete, but set new threshold to 100MB.
 (setq gc-cons-threshold most-positive-fixnum)
@@ -116,7 +110,9 @@
 
 (use-package diminish)
 
-(use-package editorconfig :config (editorconfig-mode 1))
+(use-package editorconfig
+  :diminish editorconfig-mode
+  :config (editorconfig-mode 1))
 
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns))
@@ -142,7 +138,6 @@
   (use-package counsel
     :config
     (global-set-key (kbd "M-x") 'counsel-M-x)
-    (global-set-key (kbd "C-x C-m") 'counsel-M-x)
     (global-set-key (kbd "C-x C-f") 'counsel-find-file)
     (global-set-key (kbd "<f1> f") 'counsel-describe-function)
     (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
@@ -361,9 +356,7 @@ argument is given, the duplicated region will be commented out."
   (when (equal window-system 'ns)
     (setq ns-alternate-modifier 'none)
     (setq ns-command-modifier 'meta)
-    (setq ns-function-modifier 'hyper)
-
-    (add-to-list 'default-frame-alist '(ns-appearance . dark)))
+    (setq ns-function-modifier 'hyper))
 
   (setq delete-by-moving-to-trash t)
   (setq trash-directory "~/.Trash/emacs")
@@ -378,9 +371,29 @@ argument is given, the duplicated region will be commented out."
 
 ;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package material-theme
-  :config
-  (add-to-list 'default-frame-alist '(cursor-color . "white")))
+(when window-system
+  (require 'cl)
+
+  (use-package material-theme)
+
+  (defun turn-white ()
+    (interactive)
+    (load-theme 'material-light t nil)
+    (modify-all-frames-parameters '((ns-appearance . light)
+                                    (ns-transparent-titlebar . nil)
+                                    (cursor-color . "black"))))
+  (defun turn-black ()
+    (interactive)
+    (load-theme 'material t nil)
+    (set-frame-parameter nil 'ns-appearance 'dark)
+    (modify-all-frames-parameters '((ns-appearance . dark)
+                                    (ns-transparent-titlebar . nil)
+                                    (cursor-color . "white"))))
+
+  (global-set-key (kbd "<f8>") 'turn-white)
+  (global-set-key (kbd "<f9>") 'turn-black)
+
+  (turn-white))
 
 ;;; Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
