@@ -19,10 +19,10 @@
 ;; Enable modes
 (column-number-mode 1)
 (delete-selection-mode 1)
-(winner-mode 1)
 
 ;; Sanity
 (setq custom-file (make-temp-file ""))
+(setq default-directory "~/")
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq ring-bell-function 'ignore)
@@ -65,7 +65,7 @@
 (package-initialize)
 
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/"))
+             '("melpa" . "https://melpa.org/packages/") t)
 
 (unless package-archive-contents
   (package-refresh-contents))
@@ -371,8 +371,6 @@ argument is given, the duplicated region will be commented out."
 ;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (when window-system
-  (require 'cl)
-
   (use-package material-theme)
 
   (defun turn-white ()
@@ -392,7 +390,7 @@ argument is given, the duplicated region will be commented out."
   (global-set-key (kbd "<f8>") 'turn-white)
   (global-set-key (kbd "<f9>") 'turn-black)
 
-  (turn-white))
+  (turn-black))
 
 ;;; Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
