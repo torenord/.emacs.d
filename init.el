@@ -1,4 +1,11 @@
 (defconst emacs-start-time (current-time))
+(add-hook 'after-init-hook
+          `(lambda ()
+             (let ((elapsed
+                    (float-time
+                     (time-subtract (current-time) emacs-start-time))))
+               (message "Loading %s...done (%.3fs) [after-init]"
+                        ,load-file-name elapsed))))
 
 ;; Turn off garbage collection during startup. Then, turn back on when
 ;; startup is complete, but set new threshold to 100MB.
@@ -386,13 +393,3 @@ argument is given, the duplicated region will be commented out."
 (let ((custom-file (concat user-emacs-directory "custom.el")))
   (when (file-exists-p custom-file)
     (load-file custom-file)))
-
-;;; Post initialization ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(add-hook 'after-init-hook
-          `(lambda ()
-             (let ((elapsed (float-time (time-subtract (current-time)
-                                                       emacs-start-time))))
-               (message "Loading %s...done (%.3fs) [after-init]"
-                        ,load-file-name elapsed)))
-          t)
