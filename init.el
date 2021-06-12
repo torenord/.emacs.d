@@ -340,10 +340,6 @@ argument is given, the duplicated region will be commented out."
         (forward-sexp))
     ad-do-it))
 
-(defadvice load-theme
-    (before disable-before-load (theme &optional no-confirm no-enable) activate)
-  (mapc 'disable-theme custom-enabled-themes))
-
 ;;; OS specifics ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; macOS
@@ -366,27 +362,33 @@ argument is given, the duplicated region will be commented out."
 
 ;;; Theme ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defadvice load-theme
+    (before disable-before-load (theme &optional no-confirm no-enable) activate)
+  (mapc 'disable-theme custom-enabled-themes))
+
 (when window-system
   (use-package material-theme)
 
-  (defun turn-white ()
+  (defun theme-light ()
     (interactive)
     (load-theme 'material-light t nil)
     (modify-all-frames-parameters '((ns-appearance . light)
-                                    (ns-transparent-titlebar . nil)
                                     (cursor-color . "black"))))
-  (defun turn-black ()
+
+  (defun theme-dark ()
     (interactive)
     (load-theme 'material t nil)
-    (set-frame-parameter nil 'ns-appearance 'dark)
     (modify-all-frames-parameters '((ns-appearance . dark)
-                                    (ns-transparent-titlebar . nil)
                                     (cursor-color . "white"))))
 
-  (global-set-key (kbd "<f8>") 'turn-white)
-  (global-set-key (kbd "<f9>") 'turn-black)
+  (global-set-key (kbd "<f8>") 'theme-light)
+  (global-set-key (kbd "<f9>") 'theme-dark)
 
-  (turn-black))
+  (defun dark-mode? ()
+    (or (not (eq system-type 'darwin))
+        (string= (shell-command-to-string "defaults read -g AppleInterfaceStyle") "Dark\n")))
+
+  (if (dark-mode?) (theme-dark) (theme-light)))
 
 ;;; Custom ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
