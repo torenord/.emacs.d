@@ -188,17 +188,6 @@
 
 (use-package olivetti :config (setq olivetti-body-width 120))
 
-(use-package pdf-tools
-  :if window-system
-  :mode "\\.pdf\\'"
-  :config
-  (add-hook 'pdf-tools-enabled-hook
-            (lambda ()
-              (setq buffer-face-mode-face `(:background "#eeeeee"))
-              (buffer-face-mode 1)))
-
-  (pdf-tools-install))
-
 (use-package projectile)
 
 (use-package server
