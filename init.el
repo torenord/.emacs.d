@@ -7,11 +7,6 @@
                (message "Loading %s...done (%.3fs) [after-init]"
                         ,load-file-name elapsed))))
 
-;; Turn off garbage collection during startup. Then, turn back on when
-;; startup is complete, but set new threshold to 100MB.
-(setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 100000000)))
-
 ;; Only keep menu bar in GUI on macOS.
 (unless (eq window-system 'ns)
   (menu-bar-mode -1))
